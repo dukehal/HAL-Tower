@@ -1,14 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content"
+    android:orientation="vertical"
+    android:id="@+id/video_overlay_container"
+    >
 
-    <ImageView
-        android:id="@+id/imageOverlay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:maxHeight="50px"
-        android:maxWidth="50px"
-        android:src="@drawable/image_overlay" />
-
+    <VideoView
+        android:id="@+id/myvideoview"
+        android:layout_width="300px"
+        android:layout_height="300px"
+        />
 </LinearLayout>
+<!--
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:id="@+id/container"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:background="#ff000000"
+tools:context="com.serenegiant.usbcameratest.MainActivity"
+tools:ignore="MergeRootFrame" >
+
+<org.droidplanner.android.widget.UVCCameraTextureView
+    android:id="@+id/UVCCameraTextureView1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_centerInParent="true"
+    android:layout_gravity="center"
+    android:background="#ff000000" />
+
+
+<ImageView
+    android:id="@+id/imageView1"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignTop="@+id/UVCCameraTextureView1"
+    android:layout_alignBottom="@+id/UVCCameraTextureView1"
+    android:layout_alignLeft="@+id/UVCCameraTextureView1"
+    android:layout_alignRight="@+id/UVCCameraTextureView1"
+    android:src="@drawable/border" />
+
+<ImageButton
+    android:id="@+id/capture_button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignBottom="@id/UVCCameraTextureView1"
+    android:layout_centerHorizontal="true"
+    android:adjustViewBounds="false"
+    android:background="@null"
+    android:padding="3dp"
+    android:scaleType="fitXY"
+    android:src="@android:drawable/ic_menu_camera" />
+
+<ToggleButton
+    android:id="@+id/camera_button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignTop="@id/UVCCameraTextureView1"
+    android:layout_alignLeft="@id/UVCCameraTextureView1"
+    android:text="ToggleButton" />
+
+
+</RelativeLayout>
+-->

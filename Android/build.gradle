@@ -30,7 +30,7 @@ android {
 
     defaultConfig {
         applicationId 'org.droidplanner.android'
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 22
         versionCode 30106
         versionName getGitVersion()
