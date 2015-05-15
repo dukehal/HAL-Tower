@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
@@ -15,8 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
+import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -151,6 +154,7 @@ public class FlightActivity extends DrawerNavigationUI {
     private View mFlightActionsView;
 
     private View mLocationButtonsContainer;
+    private View mVideoOverlayContainer;
     private ImageButton mGoToMyLocation;
     private ImageButton mGoToDroneLocation;
     private ImageButton actionDrawerToggle;
@@ -169,6 +173,7 @@ public class FlightActivity extends DrawerNavigationUI {
             final int slidingDrawerWidth = telemetryView.getWidth();
             final boolean isSlidingDrawerOpened = isActionDrawerOpened();
             updateLocationButtonsMargin(isSlidingDrawerOpened, slidingDrawerWidth);
+            updateVideoOverlayMargin(isSlidingDrawerOpened, slidingDrawerWidth);
         }
     }
 
@@ -187,6 +192,7 @@ public class FlightActivity extends DrawerNavigationUI {
             final int slidingDrawerWidth = telemetryView.getWidth();
             final boolean isSlidingDrawerOpened = isActionDrawerOpened();
             updateLocationButtonsMargin(isSlidingDrawerOpened, slidingDrawerWidth);
+            updateVideoOverlayMargin(isSlidingDrawerOpened, slidingDrawerWidth);
         }
     }
 
@@ -194,6 +200,10 @@ public class FlightActivity extends DrawerNavigationUI {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flight);
+
+        //Call to play video overlayed on map
+        playVideo();
+
 
         fragmentManager = getSupportFragmentManager();
 
@@ -203,6 +213,7 @@ public class FlightActivity extends DrawerNavigationUI {
         setupMapFragment();
 
         mLocationButtonsContainer = findViewById(R.id.location_button_container);
+        mVideoOverlayContainer = findViewById(R.id.video_overlay_container);
         mGoToMyLocation = (ImageButton) findViewById(R.id.my_location_button);
         mGoToDroneLocation = (ImageButton) findViewById(R.id.drone_location_button);
         actionDrawerToggle = (ImageButton) findViewById(R.id.toggle_action_drawer);
@@ -437,6 +448,7 @@ public class FlightActivity extends DrawerNavigationUI {
         if (telemetryView != null) {
             final int slidingDrawerWidth = telemetryView.getWidth();
             updateLocationButtonsMargin(isActionDrawerOpened(), slidingDrawerWidth);
+            updateVideoOverlayMargin(isActionDrawerOpened(), slidingDrawerWidth);
         }
     }
 
@@ -452,6 +464,16 @@ public class FlightActivity extends DrawerNavigationUI {
         final int rightMargin = isOpened ? marginLp.leftMargin + drawerWidth : marginLp.leftMargin;
         marginLp.setMargins(marginLp.leftMargin, marginLp.topMargin, rightMargin, marginLp.bottomMargin);
         mLocationButtonsContainer.requestLayout();
+    }
+
+    private void updateVideoOverlayMargin(boolean isOpened, int drawerWidth) {
+
+        // Update the right margin for the my location button
+        final ViewGroup.MarginLayoutParams marginLp = (ViewGroup.MarginLayoutParams) mVideoOverlayContainer.getLayoutParams();
+        final int rightMargin = isOpened ? marginLp.leftMargin + drawerWidth : marginLp.leftMargin;
+        marginLp.setMargins(marginLp.leftMargin, marginLp.topMargin, rightMargin, marginLp.bottomMargin);
+        mVideoOverlayContainer.requestLayout();
+
     }
 
     private void enableSlidingUpPanel(Drone api) {
@@ -501,4 +523,20 @@ public class FlightActivity extends DrawerNavigationUI {
             handler.postDelayed(hideWarningView, WARNING_VIEW_DISPLAY_TIMEOUT);
         }
     }
+
+    //Function to play the video overlay on the map
+    private void playVideo() {
+
+        //Connect to XML file
+        VideoView myVideoView = (VideoView)findViewById(R.id.myvideoview);
+        //Set video source
+        String uri = "android.resource://" + getPackageName() + "/" + R.raw.samplevid;
+        //Set up and play video
+        myVideoView.setVideoURI(Uri.parse(uri));
+        myVideoView.setMediaController(new MediaController(this));
+        myVideoView.requestFocus();
+        myVideoView.start();
+
+    }
+
 }
