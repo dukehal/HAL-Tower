@@ -44,6 +44,8 @@ import android.os.Handler;
 import android.util.Log;
 import android.util.SparseArray;
 
+import org.droidplanner.android.fragments.VideoFeedFragment;
+
 public final class USBMonitor {
 
 	private static final boolean DEBUG = false;	// TODO set false on production

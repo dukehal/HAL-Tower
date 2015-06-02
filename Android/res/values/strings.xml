@@ -550,4 +550,12 @@
     <string name="pref_udp_ping_receiver_ip_title">UDP ping receiver ip</string>
     <string name="pref_udp_ping_receiver_port_title">UDP ping receiver port</string>
 
+
+    <!-- BetterTower Video Feed Strings -->
+    <string name="app_name">USBCameraTest2</string>
+    <string name="select">Select USB Web Camera</string>
+    <string name="camera">Camera</string>
+    <string name="no_device">No USB camera found</string>
+
+
 </resources>
