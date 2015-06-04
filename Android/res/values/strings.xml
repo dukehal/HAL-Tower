@@ -2,7 +2,7 @@
 <resources>
 
     <!-- Do not translate the following strings -->
-    <string name="app_title" translatable="false">Tower</string>
+    <string name="app_title" translatable="false">BetterTower</string>
 
     <!-- Generic strings -->
     <string name="settings">Settings</string>
@@ -552,7 +552,7 @@
 
 
     <!-- BetterTower Video Feed Strings -->
-    <string name="app_name">USBCameraTest2</string>
+
     <string name="select">Select USB Web Camera</string>
     <string name="camera">Camera</string>
     <string name="no_device">No USB camera found</string>

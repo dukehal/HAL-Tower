@@ -3,7 +3,6 @@ package org.droidplanner.android.fragments;
 import android.app.Fragment;
 import android.graphics.SurfaceTexture;
 import android.hardware.usb.UsbDevice;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.TextUtils;
@@ -13,19 +12,18 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
-import android.widget.MediaController;
-import android.widget.Toast;
 import android.widget.ToggleButton;
-import android.widget.VideoView;
+
+
+
+import com.serenegiant.usb.USBMonitor;
+import com.serenegiant.usb.USBMonitor.OnDeviceConnectListener;
+import com.serenegiant.usb.UVCCamera;
 
 import org.droidplanner.android.R;
 import org.droidplanner.android.usb.CameraDialog;
-import org.droidplanner.android.usb.USBMonitor;
-import org.droidplanner.android.usb.USBMonitor.OnDeviceConnectListener;
-import org.droidplanner.android.usb.UVCCamera;
 import org.droidplanner.android.video.Encoder;
 import org.droidplanner.android.video.SurfaceEncoder;
 import org.droidplanner.android.widget.UVCCameraTextureView;
@@ -38,6 +36,8 @@ import java.util.Locale;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+
+
 
 /**
  * Created by converge-devan on 5/15/15.

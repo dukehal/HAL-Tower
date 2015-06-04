@@ -23,10 +23,6 @@ package org.droidplanner.android.usb;
  * Files in the jni/libjpeg, jni/libusb and jin/libuvc folder may have a different license, see the respective files.
 */
 
-import java.util.ArrayList;
-import java.util.List;
-import org.droidplanner.android.usb.DeviceFilter;
-import org.droidplanner.android.usb.USBMonitor;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -45,8 +41,14 @@ import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.Spinner;
 
+import com.serenegiant.usb.DeviceFilter;
+import com.serenegiant.usb.USBMonitor;
+
 import org.droidplanner.android.R;
 import org.droidplanner.android.fragments.VideoFeedFragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CameraDialog extends DialogFragment {
 	private static final String TAG = CameraDialog.class.getSimpleName();
