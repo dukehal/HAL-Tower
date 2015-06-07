@@ -77,7 +77,7 @@ public abstract class DroneMap extends ApiListenerFragment {
                     break;
 
                 case AttributeEvent.GPS_POSITION: {
-					Log.w("dbug:evt", "GPS_POSITION");
+					//Log.w("dbug:evt", "GPS_POSITION");
                     mMapFragment.updateMarker(graphicDrone);
                     mMapFragment.updateDroneLeashPath(guided);
                     final Gps droneGps = drone.getAttribute(AttributeType.GPS);

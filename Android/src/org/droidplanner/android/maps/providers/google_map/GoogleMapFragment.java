@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -33,7 +34,6 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
-import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -67,6 +67,8 @@ import com.o3dr.services.android.lib.util.googleApi.GoogleApiClientManager.Googl
 import org.droidplanner.android.DroidPlannerApp;
 import org.droidplanner.android.R;
 import org.droidplanner.android.fragments.SettingsFragment;
+import org.droidplanner.android.hal.listeners.OnInfoWindowElemTouchListener;
+import org.droidplanner.android.hal.wrappers.MapWrapperLayout;
 import org.droidplanner.android.helpers.LocalMapTileProvider;
 import org.droidplanner.android.maps.DPMap;
 import org.droidplanner.android.maps.MarkerInfo;
@@ -75,6 +77,7 @@ import org.droidplanner.android.utils.DroneHelper;
 import org.droidplanner.android.utils.collection.HashBiMap;
 import org.droidplanner.android.utils.prefs.AutoPanMode;
 import org.droidplanner.android.utils.prefs.DroidPlannerPrefs;
+import org.droidplanner.android.hal.DroneContextMenuAdapter;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -471,6 +474,12 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
         final Bitmap markerIcon = markerInfo.getIcon(getResources());
         if (markerIcon != null) {
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(markerIcon));
+        }
+
+        // Special Setup for Marker if it is the drone icon (GraphicDroneHAL class).
+        Log.w("dbug:info", "Value of markerInfo.getClass().getSimpleName(): " + markerInfo.getClass().getSimpleName());
+        if (markerInfo.getClass().getSimpleName().equals("GraphicDroneHAL")) {
+            Log.w("dbug:info", "Found graphic drone in marker generation!");
         }
 
         Marker marker = getMap().addMarker(markerOptions);
@@ -871,12 +880,74 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
 
                 if (mMarkerClickListener != null) {
                     final MarkerInfo markerInfo = mBiMarkersMap.getKey(marker);
-                    if(markerInfo != null)
+                    if (markerInfo != null)
                         return mMarkerClickListener.onMarkerClick(markerInfo);
                 }
                 return false;
             }
         });
+
+        // For Drone Context Menu setup.
+        View infoWindow = (ViewGroup) getActivity().getLayoutInflater().inflate(R.layout.drone_context_menu, null);
+        MapWrapperLayout mapWrapperLayout = (MapWrapperLayout)getActivity().findViewById(R.id.map_relative_layout);
+        googleMap.setInfoWindowAdapter(new DroneContextMenuAdapter(infoWindow, mapWrapperLayout));
+
+        // MapWrapperLayout initialization.
+        mapWrapperLayout.init(googleMap, getPixelsFromDp(getActivity(), 39+20));
+
+        // We want to resuse the info window for all the markers,
+        // so let's create only one class member instance.
+        ImageButton droneTakeoff = (ImageButton) infoWindow.findViewById(R.id.droneTakeoff);
+        ImageButton droneLand = (ImageButton) infoWindow.findViewById(R.id.droneLand);
+        ImageButton droneHover = (ImageButton) infoWindow.findViewById(R.id.droneHover);
+        ImageButton droneHome= (ImageButton) infoWindow.findViewById(R.id.droneHome);
+
+        OnInfoWindowElemTouchListener takeoffButtonListener = new OnInfoWindowElemTouchListener(droneTakeoff,
+                getResources().getDrawable(R.drawable.drone_2x2_takeoff),
+                getResources().getDrawable(R.drawable.drone_2x2_takeoff_pressed)) {
+            @Override
+            protected void onClickConfirmed(View v, Marker marker) {
+                Log.w("dbug:click", "Drone Takeoff Clicked!!");
+            }
+        };
+
+        OnInfoWindowElemTouchListener landButtonListener = new OnInfoWindowElemTouchListener(droneLand,
+                getResources().getDrawable(R.drawable.drone_2x2_land),
+                getResources().getDrawable(R.drawable.drone_2x2_land_pressed)) {
+            @Override
+            protected void onClickConfirmed(View v, Marker marker) {
+                Log.w("dbug:click", "Drone Land Clicked!!");
+            }
+        };
+
+        OnInfoWindowElemTouchListener hoverButtonListener = new OnInfoWindowElemTouchListener(droneHover ,
+                getResources().getDrawable(R.drawable.drone_2x2_hover),
+                getResources().getDrawable(R.drawable.drone_2x2_hover_pressed)) {
+            @Override
+            protected void onClickConfirmed(View v, Marker marker) {
+                Log.w("dbug:click", "Drone Hover  Clicked!!");
+            }
+        };
+
+        OnInfoWindowElemTouchListener homeButtonListener = new OnInfoWindowElemTouchListener(droneHome,
+                getResources().getDrawable(R.drawable.drone_2x2_home),
+                getResources().getDrawable(R.drawable.drone_2x2_home_pressed)) {
+            @Override
+            protected void onClickConfirmed(View v, Marker marker) {
+                Log.w("dbug:click", "Drone Takeoff Clicked!!");
+            }
+        };
+
+        droneTakeoff.setOnTouchListener(takeoffButtonListener);
+        droneLand.setOnTouchListener(landButtonListener);
+        droneHover.setOnTouchListener(hoverButtonListener);
+        droneHome.setOnTouchListener(homeButtonListener);
+
+    }
+
+    public static int getPixelsFromDp(Context context, float dp) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int)(dp * scale + 0.5f);
     }
 
     private void setupMapUI(GoogleMap map) {
