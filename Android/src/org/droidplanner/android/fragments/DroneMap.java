@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import com.o3dr.services.android.lib.drone.property.Gps;
 import org.droidplanner.android.R;
 import org.droidplanner.android.fragments.helpers.ApiListenerFragment;
 import org.droidplanner.android.graphic.map.GraphicDrone;
+import org.droidplanner.android.graphic.map.GraphicDroneHAL;
 import org.droidplanner.android.graphic.map.GraphicGuided;
 import org.droidplanner.android.graphic.map.GraphicHome;
 import org.droidplanner.android.maps.DPMap;
@@ -75,6 +77,7 @@ public abstract class DroneMap extends ApiListenerFragment {
                     break;
 
                 case AttributeEvent.GPS_POSITION: {
+					Log.w("dbug:evt", "GPS_POSITION");
                     mMapFragment.updateMarker(graphicDrone);
                     mMapFragment.updateDroneLeashPath(guided);
                     final Gps droneGps = drone.getAttribute(AttributeType.GPS);
@@ -228,8 +231,10 @@ public abstract class DroneMap extends ApiListenerFragment {
 		missionProxy = getMissionProxy();
 
 		home = new GraphicHome(drone);
-		graphicDrone = new GraphicDrone(drone);
+		graphicDrone = new GraphicDroneHAL(drone);
 		guided = new GraphicGuided(drone);
+
+		Log.w("dbug", mMapFragment.getClass().getName());
 
 		postUpdate();
 	}
@@ -240,6 +245,7 @@ public abstract class DroneMap extends ApiListenerFragment {
 	}
 
 	private void updateMapFragment() {
+		Log.w("dbug:mthd", "DroneMap.updateMapFragment() called");
 		// Add the map fragment instance (based on user preference)
 		final DPMapProvider mapProvider = Utils.getMapProvider(context);
 

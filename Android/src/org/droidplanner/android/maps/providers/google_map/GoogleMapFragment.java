@@ -481,7 +481,11 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
                               boolean isDraggable) {
         final Bitmap markerIcon = markerInfo.getIcon(getResources());
         if (markerIcon != null) {
+            boolean infoWindowWasShowing = marker.isInfoWindowShown();
             marker.setIcon(BitmapDescriptorFactory.fromBitmap(markerIcon));
+            if (infoWindowWasShowing) {
+                marker.showInfoWindow();
+            }
         }
 
         marker.setAlpha(markerInfo.getAlpha());
@@ -491,7 +495,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
         marker.setPosition(position);
         marker.setRotation(markerInfo.getRotation());
         marker.setSnippet(markerInfo.getSnippet());
-        marker.setTitle(markerInfo.getTitle());
+//        marker.setTitle(markerInfo.getTitle());
         marker.setDraggable(isDraggable);
         marker.setFlat(markerInfo.isFlat());
         marker.setVisible(markerInfo.isVisible());
@@ -858,6 +862,8 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
         googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
+                marker.setTitle("Title 123!");
+                marker.showInfoWindow();
                 if (useMarkerClickAsMapClick) {
                     onMapClickListener.onMapClick(marker.getPosition());
                     return true;

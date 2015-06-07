@@ -1,5 +1,6 @@
 package org.droidplanner.android.fragments;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -7,9 +8,11 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TableLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -167,6 +170,17 @@ public class FlightMapFragment extends DroneMap implements DPMap.OnMapLongClickL
         if(markerInfo == null)
             return false;
 
+        Log.w("dbug Title: ", markerInfo.getPosition().toString());
+
+        if (markerInfo == this.graphicDrone) {
+            Log.w("dbug Title: ", "You clicked the DRONE ICON!!!!");
+            //InfoWindow
+            //this.graphicDrone.
+
+        } else {
+            Log.w("dbug Title: ", "You didn't click the drone icon!!!!");
+        }
+
         drone.sendGuidedPoint(markerInfo.getPosition(), false);
         return true;
     }
@@ -190,6 +204,8 @@ public class FlightMapFragment extends DroneMap implements DPMap.OnMapLongClickL
     @Override
     public void goToDroneLocation() {
         super.goToDroneLocation();
+
+        Log.w("dbug Title: ", "In goToDroneLocation()");
 
         if(this.drone == null)
             return;
