@@ -14,7 +14,7 @@ import com.o3dr.services.android.lib.drone.property.Home;
 
 public class GraphicHome extends MarkerInfo.SimpleMarkerInfo {
 
-	private Drone drone;
+	protected Drone drone;
 
 	public GraphicHome(Drone drone) {
 		this.drone = drone;

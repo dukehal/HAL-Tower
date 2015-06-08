@@ -501,4 +501,12 @@ public class FlightActivity extends DrawerNavigationUI {
             handler.postDelayed(hideWarningView, WARNING_VIEW_DISPLAY_TIMEOUT);
         }
     }
+
+    public void showError(String error) {
+        handler.removeCallbacks(hideWarningView);
+
+        warningView.setText(error);
+        warningView.setVisibility(View.VISIBLE);
+        handler.postDelayed(hideWarningView, WARNING_VIEW_DISPLAY_TIMEOUT);
+    }
 }

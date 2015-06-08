@@ -27,6 +27,7 @@ import org.droidplanner.android.graphic.map.GraphicDrone;
 import org.droidplanner.android.graphic.map.GraphicDroneHAL;
 import org.droidplanner.android.graphic.map.GraphicGuided;
 import org.droidplanner.android.graphic.map.GraphicHome;
+import org.droidplanner.android.graphic.map.GraphicHomeHAL;
 import org.droidplanner.android.maps.DPMap;
 import org.droidplanner.android.maps.MarkerInfo;
 import org.droidplanner.android.maps.providers.DPMapProvider;
@@ -230,7 +231,7 @@ public abstract class DroneMap extends ApiListenerFragment {
 		drone = getDrone();
 		missionProxy = getMissionProxy();
 
-		home = new GraphicHome(drone);
+		home = new GraphicHomeHAL(drone);
 		graphicDrone = new GraphicDroneHAL(drone);
 		guided = new GraphicGuided(drone);
 

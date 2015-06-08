@@ -46,13 +46,24 @@ public abstract class OnInfoWindowElemTouchListener implements View.OnTouchListe
 
             Log.w("dbug:info", "OnInfoWindowElemTouchListener.onTouch() determined to be INSIDE view area.");
             switch (event.getActionMasked()) {
-                case MotionEvent.ACTION_DOWN: startPress(); break;
+                case MotionEvent.ACTION_DOWN:
+                    Log.w("dbug:info", "MotionEvent.ACTION_DOWN");
+                    startPress();
+                    break;
 
                 // We need to delay releasing of the View a little so it shows the pressed state on the screen.
-                case MotionEvent.ACTION_UP: handler.postDelayed(confirmClickRunnable, 150); break;
+                case MotionEvent.ACTION_UP:
+                    Log.w("dbug:info", "MotionEvent.ACTION_UP");
+                    handler.postDelayed(confirmClickRunnable, 350);
+                    break;
 
-                case MotionEvent.ACTION_CANCEL: endPress(); break;
-                default: break;
+                case MotionEvent.ACTION_CANCEL: endPress();
+                    Log.w("dbug:info", "MotionEvent.ACTION_CANCEL");
+                    break;
+
+                default:
+                    Log.w("dbug:info", "MotionEvent.default");
+                    break;
             }
 
         } else {
@@ -67,11 +78,14 @@ public abstract class OnInfoWindowElemTouchListener implements View.OnTouchListe
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void startPress() {
+        Log.w("dbug:mthd", "OnInfoWindowElemTouchListener.startPress() called.");
         if (!pressed) {
             pressed = true;
             handler.removeCallbacks(confirmClickRunnable);
+            Log.w("dbug:info", "View Set Background to Pressed.");
             view.setBackground(bgDrawablePressed);
             if (marker != null) {
+                Log.w("dbug:info", "marker Show Info Window.");
                 marker.showInfoWindow();
             }
         }
@@ -79,11 +93,14 @@ public abstract class OnInfoWindowElemTouchListener implements View.OnTouchListe
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private boolean endPress() {
+        Log.w("dbug:mthd", "OnInfoWindowElemTouchListener.endPress() called.");
         if (pressed) {
             this.pressed = false;
             handler.removeCallbacks(confirmClickRunnable);
+            Log.w("dbug:info", "View Set Background to Normal.");
             view.setBackground(bgDrawableNormal);
             if (marker != null) {
+                Log.w("dbug:info", "marker Show Info Window.");
                 marker.showInfoWindow();
             }
             return true;

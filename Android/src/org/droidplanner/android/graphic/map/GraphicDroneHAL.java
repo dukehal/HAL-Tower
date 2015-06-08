@@ -64,4 +64,9 @@ public class GraphicDroneHAL extends GraphicDrone {
         Gps droneGps = drone.getAttribute(AttributeType.GPS);
 		return droneGps != null && droneGps.isValid();
 	}
+
+
+	public String getTitle() {
+		return "Drone Icon";
+	}
 }

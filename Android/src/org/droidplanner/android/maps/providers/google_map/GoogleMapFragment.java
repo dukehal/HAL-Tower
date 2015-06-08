@@ -1,5 +1,6 @@
 package org.droidplanner.android.maps.providers.google_map;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,6 +12,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
@@ -61,11 +63,14 @@ import com.o3dr.services.android.lib.drone.attribute.AttributeEvent;
 import com.o3dr.services.android.lib.drone.attribute.AttributeType;
 import com.o3dr.services.android.lib.drone.property.FootPrint;
 import com.o3dr.services.android.lib.drone.property.Gps;
+import com.o3dr.services.android.lib.drone.property.State;
+import com.o3dr.services.android.lib.drone.property.VehicleMode;
 import com.o3dr.services.android.lib.util.googleApi.GoogleApiClientManager;
 import com.o3dr.services.android.lib.util.googleApi.GoogleApiClientManager.GoogleApiClientTask;
 
 import org.droidplanner.android.DroidPlannerApp;
 import org.droidplanner.android.R;
+import org.droidplanner.android.activities.FlightActivity;
 import org.droidplanner.android.fragments.SettingsFragment;
 import org.droidplanner.android.hal.listeners.OnInfoWindowElemTouchListener;
 import org.droidplanner.android.hal.wrappers.MapWrapperLayout;
@@ -77,7 +82,7 @@ import org.droidplanner.android.utils.DroneHelper;
 import org.droidplanner.android.utils.collection.HashBiMap;
 import org.droidplanner.android.utils.prefs.AutoPanMode;
 import org.droidplanner.android.utils.prefs.DroidPlannerPrefs;
-import org.droidplanner.android.hal.DroneContextMenuAdapter;
+import org.droidplanner.android.hal.adapterViews.DroneContextMenuAdapter;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -743,6 +748,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
                 setupMapUI(googleMap);
                 setupMapOverlay(googleMap);
                 setupMapListeners(googleMap);
+                setupMapHAL(googleMap);
             }
         });
     }
@@ -871,8 +877,6 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
         googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                marker.setTitle("Title 123!");
-                marker.showInfoWindow();
                 if (useMarkerClickAsMapClick) {
                     onMapClickListener.onMapClick(marker.getPosition());
                     return true;
@@ -887,8 +891,14 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
             }
         });
 
+    }
+
+    private void setupMapHAL(GoogleMap googleMap) {
+
+        final Handler handler = new Handler();
+
         // For Drone Context Menu setup.
-        View infoWindow = (ViewGroup) getActivity().getLayoutInflater().inflate(R.layout.drone_context_menu, null);
+        View infoWindow = getActivity().getLayoutInflater().inflate(R.layout.drone_context_menu, null);
         MapWrapperLayout mapWrapperLayout = (MapWrapperLayout)getActivity().findViewById(R.id.map_relative_layout);
         googleMap.setInfoWindowAdapter(new DroneContextMenuAdapter(infoWindow, mapWrapperLayout));
 
@@ -908,7 +918,17 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
             @Override
             protected void onClickConfirmed(View v, Marker marker) {
                 Log.w("dbug:click", "Drone Takeoff Clicked!!");
+
+                Drone drone = getDroneApi();
+                State vehicleState = drone.getAttribute(AttributeType.STATE);
+                if (vehicleState.isArmed()) {
+                    drone.doGuidedTakeoff(10.0);
+                } else {
+                    ((FlightActivity) getActivity()).showError("Drone must be armed before takeoff.");
+                }
+
             }
+
         };
 
         OnInfoWindowElemTouchListener landButtonListener = new OnInfoWindowElemTouchListener(droneLand,
@@ -917,6 +937,14 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
             @Override
             protected void onClickConfirmed(View v, Marker marker) {
                 Log.w("dbug:click", "Drone Land Clicked!!");
+                Drone drone = getDroneApi();
+                State vehicleState = drone.getAttribute(AttributeType.STATE);
+                if (vehicleState.isArmed()) {
+                    drone.changeVehicleMode(VehicleMode.COPTER_LAND);
+                } else {
+                    ((FlightActivity) getActivity()).showError("Drone is not armed.");
+                }
+
             }
         };
 
@@ -926,6 +954,13 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
             @Override
             protected void onClickConfirmed(View v, Marker marker) {
                 Log.w("dbug:click", "Drone Hover  Clicked!!");
+                Drone drone = getDroneApi();
+                State vehicleState = drone.getAttribute(AttributeType.STATE);
+                if (vehicleState.isArmed()) {
+                    drone.doGuidedTakeoff(10.0);
+                } else {
+                    ((FlightActivity) getActivity()).showError("Drone must be armed before hovering.");
+                }
             }
         };
 
@@ -934,7 +969,15 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
                 getResources().getDrawable(R.drawable.drone_2x2_home_pressed)) {
             @Override
             protected void onClickConfirmed(View v, Marker marker) {
-                Log.w("dbug:click", "Drone Takeoff Clicked!!");
+                Log.w("dbug:click", "Drone Home Clicked!!");
+                Drone drone = getDroneApi();
+                State vehicleState = drone.getAttribute(AttributeType.STATE);
+                if (vehicleState.isArmed()) {
+                    drone.changeVehicleMode(VehicleMode.COPTER_RTL);
+                } else {
+                    ((FlightActivity) getActivity()).showError("Drone is not armed.");
+                }
+
             }
         };
 

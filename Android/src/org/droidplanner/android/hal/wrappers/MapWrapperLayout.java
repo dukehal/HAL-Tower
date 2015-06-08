@@ -64,7 +64,7 @@ public class MapWrapperLayout extends RelativeLayout {
         this.map = map;
         this.bottomOffsetPixels = bottomOffsetPixels;
         Log.w("dbug:mthd", "MapWrapperLayout.init() called.");
-        Log.w("dbug:info", "oot view class name: " + getRootView().getClass().getName());
+        Log.w("dbug:info", "Root view class name: " + getRootView().getClass().getName());
 
     }
 
@@ -73,6 +73,7 @@ public class MapWrapperLayout extends RelativeLayout {
      * or InfoWindowAdapater.getInfoWindow.
      */
     public void setMarkerWithInfoWindow(Marker marker, View infoWindow) {
+//        Log.w("dbug:mthd", "MapWrapperLayout.setMarkerWithInfoWindow() called.");
         this.marker = marker;
         this.infoWindow = infoWindow;
     }
@@ -80,25 +81,25 @@ public class MapWrapperLayout extends RelativeLayout {
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
 
-        Log.w("dbug:info", "Touch event on MapWrapperLayout!!");
+//        Log.w("dbug:info", "Touch event on MapWrapperLayout!!");
 
         boolean ret = false;
 
         // Make sure that the infoWindow is shown and we have all the needed references.
         if (marker != null && marker.isInfoWindowShown() && map != null && infoWindow != null) {
 
-            Log.w("dbug:info", "All needed references loaded in MapWrapperLayout.dispatchTouchEvent().");
+//            Log.w("dbug:info", "All needed references loaded in MapWrapperLayout.dispatchTouchEvent().");
 
             // Get the marker position on the screen.
             Point point = map.getProjection().toScreenLocation(marker.getPosition());
-            Log.w("dbug:info", "point.x: " + point.x);
-            Log.w("dbug:info", "point.y: " + point.y);
-
-            Log.w("dbug:info", "infoWindow.getWidth(): " + infoWindow.getWidth());
-            Log.w("dbug:info", "infoWindow.getHeight(): " + infoWindow.getHeight());
-
-            Log.w("dbug:info", "offset.x: " + (-point.x + (infoWindow.getWidth() / 2)));
-            Log.w("dbug:info", "offset.y: " + (-point.y + infoWindow.getHeight() + bottomOffsetPixels));
+//            Log.w("dbug:info", "point.x: " + point.x);
+//            Log.w("dbug:info", "point.y: " + point.y);
+//
+//            Log.w("dbug:info", "infoWindow.getWidth(): " + infoWindow.getWidth());
+//            Log.w("dbug:info", "infoWindow.getHeight(): " + infoWindow.getHeight());
+//
+//            Log.w("dbug:info", "offset.x: " + (-point.x + (infoWindow.getWidth() / 2)));
+//            Log.w("dbug:info", "offset.y: " + (-point.y + infoWindow.getHeight() + bottomOffsetPixels));
 
 
             // Make a copy of the MotionEvent and adjust its location
@@ -111,6 +112,22 @@ public class MapWrapperLayout extends RelativeLayout {
 
             // Dispatch the adjusted MotionEvent to the infoWindow.
             ret = infoWindow.dispatchTouchEvent(copyEv);
+
+        } else {
+//            Log.w("dbug:info", "All needed references NOT loaded in MapWrapperLayout.dispatchTouchEvent()!!!");
+            if (marker == null) {
+                Log.w("dbug:info", "marker == null");
+            } else {
+                if (!marker.isInfoWindowShown()) {
+                    Log.w("dbug:info", "!marker.isInfoWindowShown()");
+                }
+            }
+            if (map == null)  {
+                Log.w("dbug:info", "map == null");
+            }
+            if (infoWindow == null) {
+                Log.w("dbug:info", "infoWindow == null");
+            }
 
         }
 

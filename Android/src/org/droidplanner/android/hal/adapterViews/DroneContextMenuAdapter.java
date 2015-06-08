@@ -1,6 +1,7 @@
-package org.droidplanner.android.hal;
+package org.droidplanner.android.hal.adapterViews;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -27,12 +28,18 @@ public class DroneContextMenuAdapter implements GoogleMap.InfoWindowAdapter {
 
     @Override
     public View getInfoWindow(Marker marker) {
+//        Log.w("dbug:mthd", "DroneContextMenuAdapter.getInfoWindow() (first) called.");
         return null;
     }
 
     @Override
     public View getInfoContents(Marker marker) {
-        mapWrapperLayout.setMarkerWithInfoWindow(marker, view);
-        return view;
+//        Log.w("dbug:mthd", "DroneContextMenuAdapter.getInfoContents() (second) called.");
+        if (marker.getTitle() != null && marker.getTitle().equals("Drone Icon")) {
+            mapWrapperLayout.setMarkerWithInfoWindow(marker, view);
+            return view;
+        } else {
+            return null;
+        }
     }
 }
