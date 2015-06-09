@@ -57,11 +57,11 @@
             layout="@layout/button_my_location"
             android:layout_marginTop="8dp"
             android:layout_gravity="center_vertical|end"
-            android:layout_below="@+id/video_overlay_container"
+            android:layout_below="@+id/videoFeedFragment"
             android:layout_alignRight="@+id/actionbar_container"
             android:layout_alignEnd="@+id/actionbar_container"
             />
-
+<!-- First try at video overlay, can be removed
         <include
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -71,11 +71,16 @@
             android:layout_alignRight="@+id/actionbar_container"
             android:layout_below="@+id/actionbar_container"
 
-            />
+            /> -->
         <fragment android:name="org.droidplanner.android.fragments.VideoFeedFragment"
-            android:id="@+id/list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:id="@+id/videoFeedFragment"
+            android:layout_width="210dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="8dp"
+            android:layout_gravity="center_vertical|end"
+            android:layout_alignRight="@+id/actionbar_container"
+            android:layout_below="@+id/actionbar_container"
+            />
 
     </RelativeLayout>
     <!-- Sliding layout -->

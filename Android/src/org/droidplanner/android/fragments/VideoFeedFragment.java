@@ -14,9 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.Toast;
 import android.widget.ToggleButton;
-
-
 
 import com.serenegiant.usb.USBMonitor;
 import com.serenegiant.usb.USBMonitor.OnDeviceConnectListener;
@@ -99,7 +98,7 @@ public class VideoFeedFragment extends Fragment {
         mUSBMonitor.register();
         if (mUVCCamera != null)
             mUVCCamera.startPreview();
-        //updateItems();
+        updateItems();
     }
 
     @Override
@@ -137,7 +136,7 @@ public class VideoFeedFragment extends Fragment {
                 mUVCCamera.destroy();
                 mUVCCamera = null;
             }
-            //updateItems();
+            updateItems();
         }
     };
 
@@ -155,7 +154,10 @@ public class VideoFeedFragment extends Fragment {
     private final OnDeviceConnectListener mOnDeviceConnectListener = new OnDeviceConnectListener() {
         @Override
         public void onAttach(final UsbDevice device) {
-            //Toast.makeText(MainActivity.this, "USB_DEVICE_ATTACHED", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "USB_DEVICE_ATTACHED", Toast.LENGTH_SHORT).show();
+
+            //autoAttach(device);
+
         }
 
         @Override
@@ -215,6 +217,40 @@ public class VideoFeedFragment extends Fragment {
         public void onCancel() {
         }
     };
+
+    /**
+     * Function to automatically connect to a UVC camera when attached
+     */
+    public void autoAttach(final UsbDevice device) {
+
+        //Code from mOnCheckedChangedListener in VideoFeedFragment.java
+        if (mUVCCamera == null) {
+            CameraDialog.showDialog(getActivity());
+        } else if (mUVCCamera != null) {
+            mUVCCamera.destroy();
+            mUVCCamera = null;
+        }
+        Log.d("autoAttach","UpdateItems");
+        updateItems();
+
+
+//        if (mUSBMonitor == null)
+//            try {
+//                mUSBMonitor = getUSBMonitor();
+//            } catch (ClassCastException e) {
+//            } catch (NullPointerException e) {
+//            }
+//        if (mUSBMonitor == null) {
+//            //throw new ClassCastException(activity.toString() + " must implement #getUSBController");
+//            Log.d("OnDevCon OnAtt", "USB Monitor NUll");
+//        }
+//
+//
+//        mUSBMonitor.requestPermission(device);
+
+
+    };
+
 
     /**
      * to access from CameraDialog
@@ -277,7 +313,7 @@ public class VideoFeedFragment extends Fragment {
                         throw new RuntimeException("Failed to start capture.");
                 }
             });
-            //updateItems();
+            updateItems();
         }
     }
 
@@ -307,19 +343,19 @@ public class VideoFeedFragment extends Fragment {
             if (DEBUG) Log.v(TAG, "onRelease:");
             mUVCCamera.stopCapture();
             mCaptureState = CAPTURE_STOP;
-            //updateItems();
+            updateItems();
         }
     };
 
- /*   private void updateItems() {
-        this.runOnUiThread(new Runnable() {
+    private void updateItems() {
+        getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 mCaptureButton.setVisibility(mCameraButton.isChecked() ? View.VISIBLE : View.INVISIBLE);
                 mCaptureButton.setColorFilter(mCaptureState == CAPTURE_STOP ? 0 : 0xffff0000);
             }
         });
-    }*/
+    }
 
     /**
      * create file path for saving movie / still image file

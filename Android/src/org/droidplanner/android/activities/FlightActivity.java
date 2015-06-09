@@ -11,14 +11,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.MediaController;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -31,9 +29,9 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.droidplanner.android.R;
 import org.droidplanner.android.fragments.DroneMap;
-import org.droidplanner.android.fragments.control.FlightControlManagerFragment;
 import org.droidplanner.android.fragments.FlightMapFragment;
 import org.droidplanner.android.fragments.TelemetryFragment;
+import org.droidplanner.android.fragments.control.FlightControlManagerFragment;
 import org.droidplanner.android.fragments.mode.FlightModePanel;
 import org.droidplanner.android.utils.prefs.AutoPanMode;
 
@@ -202,7 +200,7 @@ public class FlightActivity extends DrawerNavigationUI {
         setContentView(R.layout.activity_flight);
 
         //Call to play video overlayed on map
-        playVideo();
+        //playVideo();
 
 
         fragmentManager = getSupportFragmentManager();
@@ -213,7 +211,7 @@ public class FlightActivity extends DrawerNavigationUI {
         setupMapFragment();
 
         mLocationButtonsContainer = findViewById(R.id.location_button_container);
-        mVideoOverlayContainer = findViewById(R.id.video_overlay_container);
+        mVideoOverlayContainer = findViewById(R.id.videoFeedFragment);
         mGoToMyLocation = (ImageButton) findViewById(R.id.my_location_button);
         mGoToDroneLocation = (ImageButton) findViewById(R.id.drone_location_button);
         actionDrawerToggle = (ImageButton) findViewById(R.id.toggle_action_drawer);
