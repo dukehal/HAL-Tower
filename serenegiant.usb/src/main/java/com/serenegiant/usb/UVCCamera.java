@@ -37,8 +37,8 @@ public class UVCCamera {
     private static final String TAG = UVCCamera.class.getSimpleName();
     private static final String DEFAULT_USBFS = "/dev/bus/usb";
 
-    public static final int DEFAULT_PREVIEW_WIDTH = 160;
-    public static final int DEFAULT_PREVIEW_HEIGHT = 120;
+    public static final int DEFAULT_PREVIEW_WIDTH = 640;
+    public static final int DEFAULT_PREVIEW_HEIGHT = 480;
     public static final int DEFAULT_PREVIEW_MODE = 0;
 
     public static final int FRAME_FORMAT_YUYV = 0;
@@ -87,6 +87,8 @@ public class UVCCamera {
                 getUSBFSName(mCtrlBlock));
         nativeSetPreviewSize(mNativePtr, DEFAULT_PREVIEW_WIDTH, DEFAULT_PREVIEW_HEIGHT, DEFAULT_PREVIEW_MODE);
         Log.d("UVC Camera Open Funct", "Here");
+
+        //Potentially put connected flag here when device is connected
     }
 
     /**
@@ -177,6 +179,7 @@ public class UVCCamera {
      * destroy UVCCamera object
      */
     public void destroy() {
+        Log.d(TAG, "UVCdestroy");
         close();
         if (mNativePtr != 0) {
             nativeDestroy(mNativePtr);

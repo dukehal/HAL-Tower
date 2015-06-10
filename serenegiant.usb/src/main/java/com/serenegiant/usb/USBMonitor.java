@@ -61,6 +61,8 @@ public final class USBMonitor {
     private PendingIntent mPermissionIntent = null;
     private DeviceFilter mDeviceFilter;
 
+    public boolean isConnected = false;
+
     private final Handler mHandler = new Handler();
 
     public interface OnDeviceConnectListener {
@@ -91,6 +93,8 @@ public final class USBMonitor {
          * called when canceled or could not get permission from user
          */
         public void onCancel();
+
+
     }
 
     public USBMonitor(final Context context, final OnDeviceConnectListener listener) {
@@ -129,6 +133,7 @@ public final class USBMonitor {
     public synchronized void register() {
         if (mPermissionIntent == null) {
             if (DEBUG) Log.i(TAG, "register:");
+
             final Context context = mWeakContext.get();
             if (context != null) {
                 mPermissionIntent = PendingIntent.getBroadcast(context, 0, new Intent(ACTION_USB_PERMISSION), 0);
@@ -141,6 +146,8 @@ public final class USBMonitor {
             mHandler.postDelayed(mDeviceCheckRunnable, 1000);
         }
     }
+
+
 
     /**
      * unregister BroadcastReceiver
@@ -285,6 +292,7 @@ public final class USBMonitor {
 
         @Override
         public void onReceive(final Context context, final Intent intent) {
+            Log.d("USBMON","BroadcastReceiver");
             final String action = intent.getAction();
             if (ACTION_USB_PERMISSION.equals(action)) {
                 synchronized (USBMonitor.this) {
@@ -292,7 +300,8 @@ public final class USBMonitor {
                     if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
                         if (device != null) {
                             processConnect(device);
-                        }
+                            Log.d("BroadcastReceiver", " device!=NULL")
+;                        }
                     } else {
                         processCancel(device);
                     }
@@ -300,6 +309,7 @@ public final class USBMonitor {
             } else if (UsbManager.ACTION_USB_DEVICE_ATTACHED.equals(action)) {
                 final UsbDevice device = (UsbDevice)intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
                 processAttach(device);
+                Log.d("BroadcastRec","ActionUSBDevAttached");
             } else if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
                 final UsbDevice device = (UsbDevice)intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
                 if (device != null) {
@@ -324,8 +334,13 @@ public final class USBMonitor {
             if (n != mDeviceCounts) {
                 if (n > mDeviceCounts) {
                     mDeviceCounts = n;
-                    if (mOnDeviceConnectListener != null)
+                    //add in "and if device is UVC" and is not connected
+                    if (mOnDeviceConnectListener != null && !isConnected) {
+                        isConnected = true;
                         mOnDeviceConnectListener.onAttach(null);
+                        Log.d("mDeviceCheckRunnable", "OnAttach Called");
+                        Log.d("isCon Value =", String.valueOf(isConnected));
+                    }
                 }
             }
             mHandler.postDelayed(this, 2000);	// confirm every 2 seconds
@@ -334,6 +349,8 @@ public final class USBMonitor {
 
     private final void processConnect(final UsbDevice device) {
         if (DEBUG) Log.v(TAG, "processConnect:");
+        isConnected = true;
+        Log.d("isCon Value =", String.valueOf(isConnected));
         mHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -356,6 +373,8 @@ public final class USBMonitor {
     }
 
     private final void processCancel(final UsbDevice device) {
+        isConnected = false;
+        Log.d("isCon Value =", String.valueOf(isConnected));
         if (DEBUG) Log.v(TAG, "processCancel:");
         if (mOnDeviceConnectListener != null) {
             mHandler.post(new Runnable() {
@@ -370,6 +389,7 @@ public final class USBMonitor {
     private final void processAttach(final UsbDevice device) {
         if (DEBUG) Log.v(TAG, "processAttach:");
         if (mOnDeviceConnectListener != null) {
+            Log.d("processAttach", "OnAttach Called");
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -380,6 +400,8 @@ public final class USBMonitor {
     }
 
     private final void processDettach(final UsbDevice device) {
+        isConnected = false;
+        Log.d("isCon Value =", String.valueOf(isConnected));
         if (DEBUG) Log.v(TAG, "processDettach:");
         if (mOnDeviceConnectListener != null) {
             mHandler.post(new Runnable() {

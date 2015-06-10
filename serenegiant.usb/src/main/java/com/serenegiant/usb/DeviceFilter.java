@@ -97,6 +97,7 @@ public final class DeviceFilter {
      * @return
      */
     public static List<DeviceFilter> getDeviceFilters(final Context context, final int deviceFilterXmlId) {
+
         final XmlPullParser parser = context.getResources().getXml(deviceFilterXmlId);
         final List<DeviceFilter> deviceFilters = new ArrayList<DeviceFilter>();
         try {
@@ -129,6 +130,7 @@ public final class DeviceFilter {
      * @return
      */
     private static final int getAttributeInteger(final Context context, final XmlPullParser parser, final String namespace, final String name, final int defaultValue) {
+
         int result = defaultValue;
         try {
             final String v = parser.getAttributeValue(namespace, name);
@@ -161,6 +163,7 @@ public final class DeviceFilter {
      * @return
      */
     private static final String getAttributeString(final Context context, final XmlPullParser parser, final String namespace, final String name, final String defaultValue) {
+
         String result = defaultValue;
         try {
             result = parser.getAttributeValue(namespace, name);

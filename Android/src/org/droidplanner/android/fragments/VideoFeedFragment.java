@@ -1,6 +1,7 @@
 package org.droidplanner.android.fragments;
 
-import android.app.Fragment;
+
+import android.support.v4.app.Fragment;
 import android.graphics.SurfaceTexture;
 import android.hardware.usb.UsbDevice;
 import android.os.Bundle;
@@ -62,6 +63,10 @@ public class VideoFeedFragment extends Fragment {
     private static USBMonitor mUSBMonitor;
     private UVCCamera mUVCCamera;
     private UVCCameraTextureView mUVCCameraView;
+
+    //public boolean isConnected;
+
+
     // for open&start / stop&close camera preview
     private ToggleButton mCameraButton;
     // for start & stop movie capture
@@ -70,6 +75,13 @@ public class VideoFeedFragment extends Fragment {
     private int mCaptureState = 0;
     private Surface mPreviewSurface;
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // retain this fragment
+        setRetainInstance(true);
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -88,6 +100,11 @@ public class VideoFeedFragment extends Fragment {
         mUVCCameraView.setSurfaceTextureListener(mSurfaceTextureListener);
 
         mUSBMonitor = new USBMonitor(getActivity(), mOnDeviceConnectListener);
+
+        //isConnected = false;
+
+        setRetainInstance(true);
+
         return view;
     }
 
@@ -95,6 +112,7 @@ public class VideoFeedFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
         mUSBMonitor.register();
         if (mUVCCamera != null)
             mUVCCamera.startPreview();
@@ -104,8 +122,8 @@ public class VideoFeedFragment extends Fragment {
     @Override
     public void onPause() {
         if (mUVCCamera != null) {
-            stopCapture();
-            mUVCCamera.stopPreview();
+            //stopCapture();
+            //mUVCCamera.stopPreview();
         }
         mUSBMonitor.unregister();
         super.onPause();
@@ -113,18 +131,20 @@ public class VideoFeedFragment extends Fragment {
 
     @Override
     public void onDestroy() {
+        Log.d(TAG, "destroy!");
         if (mUVCCamera != null) {
-            mUVCCamera.destroy();
-            mUVCCamera = null;
+           // mUVCCamera.destroy();
+           // mUVCCamera = null;
         }
         if (mUSBMonitor != null) {
-            mUSBMonitor.destroy();
-            mUSBMonitor = null;
+           // mUSBMonitor.destroy();
+           // mUSBMonitor = null;
         }
         mCameraButton = null;
         mCaptureButton = null;
-        mUVCCameraView = null;
+        //mUVCCameraView = null;
         super.onDestroy();
+
     }
 
     private final CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
@@ -156,7 +176,12 @@ public class VideoFeedFragment extends Fragment {
         public void onAttach(final UsbDevice device) {
             Toast.makeText(getActivity(), "USB_DEVICE_ATTACHED", Toast.LENGTH_SHORT).show();
 
-            //autoAttach(device);
+            //Log.d("isConnected=", String.valueOf(isConnected));
+            //if (!isConnected) {
+                //Log.d("VFF", "autoconnect Called");
+                //autoConnect(device);
+
+            //}
 
         }
 
@@ -194,11 +219,14 @@ public class VideoFeedFragment extends Fragment {
                     }
                 }
             });
+
         }
 
         @Override
         public void onDisconnect(final UsbDevice device, final USBMonitor.UsbControlBlock ctrlBlock) {
             // XXX you should check whether the comming device equal to camera device that currently using
+            Log.d("VFF", "OnDisconnect");
+            //isConnected = false;
             if (mUVCCamera != null) {
                 mUVCCamera.close();
                 if (mPreviewSurface != null) {
@@ -206,32 +234,33 @@ public class VideoFeedFragment extends Fragment {
                     mPreviewSurface = null;
                 }
             }
+
         }
 
         @Override
         public void onDettach(final UsbDevice device) {
-            //Toast.makeText(MainActivity.this, "USB_DEVICE_DETACHED", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "USB_DEVICE_DETACHED", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onCancel() {
         }
-    };
 
-    /**
-     * Function to automatically connect to a UVC camera when attached
-     */
-    public void autoAttach(final UsbDevice device) {
+        /**
+         * Function to automatically connect to a UVC camera when attached
+         */
 
-        //Code from mOnCheckedChangedListener in VideoFeedFragment.java
-        if (mUVCCamera == null) {
-            CameraDialog.showDialog(getActivity());
-        } else if (mUVCCamera != null) {
-            mUVCCamera.destroy();
-            mUVCCamera = null;
-        }
-        Log.d("autoAttach","UpdateItems");
-        updateItems();
+        public void autoConnect(final UsbDevice device) {
+
+            //Code from mOnCheckedChangedListener in VideoFeedFragment.java
+            if (mUVCCamera == null) {
+                CameraDialog.showDialog(getActivity());
+            } else if (mUVCCamera != null) {
+                mUVCCamera.destroy();
+                mUVCCamera = null;
+            }
+            Log.d("autoAttach","UpdateItems");
+            updateItems();
 
 
 //        if (mUSBMonitor == null)
@@ -249,7 +278,10 @@ public class VideoFeedFragment extends Fragment {
 //        mUSBMonitor.requestPermission(device);
 
 
+        };
+
     };
+
 
 
     /**

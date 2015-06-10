@@ -31,6 +31,7 @@ import org.droidplanner.android.R;
 import org.droidplanner.android.fragments.DroneMap;
 import org.droidplanner.android.fragments.FlightMapFragment;
 import org.droidplanner.android.fragments.TelemetryFragment;
+import org.droidplanner.android.fragments.VideoFeedFragment;
 import org.droidplanner.android.fragments.control.FlightControlManagerFragment;
 import org.droidplanner.android.fragments.mode.FlightModePanel;
 import org.droidplanner.android.utils.prefs.AutoPanMode;
@@ -147,6 +148,7 @@ public class FlightActivity extends DrawerNavigationUI {
     private FlightMapFragment mapFragment;
     private FlightControlManagerFragment flightActions;
     private TelemetryFragment telemetryFragment;
+    private VideoFeedFragment videoFragment;
 
     private SlidingUpPanelLayout mSlidingPanel;
     private View mFlightActionsView;
@@ -209,6 +211,8 @@ public class FlightActivity extends DrawerNavigationUI {
         warningView = (TextView) findViewById(R.id.failsafeTextView);
 
         setupMapFragment();
+
+
 
         mLocationButtonsContainer = findViewById(R.id.location_button_container);
         mVideoOverlayContainer = findViewById(R.id.videoFeedFragment);
@@ -273,6 +277,13 @@ public class FlightActivity extends DrawerNavigationUI {
         if (flightActions == null) {
             flightActions = new FlightControlManagerFragment();
             fragmentManager.beginTransaction().add(R.id.flightActionsFragment, flightActions).commit();
+        }
+
+        //added to tower to make video fragment dynamic
+        videoFragment = (VideoFeedFragment) fragmentManager.findFragmentById(R.id.videoFeedFragment);
+        if (videoFragment == null) {
+            videoFragment = new VideoFeedFragment();
+            fragmentManager.beginTransaction().add(R.id.videoFeedFragment, videoFragment).commit();
         }
 
         mFlightActionsView = findViewById(R.id.flightActionsFragment);
