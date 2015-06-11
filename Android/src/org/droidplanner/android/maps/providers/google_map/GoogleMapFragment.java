@@ -15,6 +15,7 @@ import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -894,9 +895,28 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
 
     }
 
-    private void setupMapHAL(GoogleMap googleMap) {
+    private void tryGuidedTakeoffHAL() {
+        final Handler handler = new Handler(Looper.getMainLooper());
 
-        final Handler handler = new Handler();
+        Runnable tryTakeoff = new Runnable() {
+            @Override
+            public void run() {
+                Drone drone = getDroneApi();
+
+                State droneState = drone.getAttribute(AttributeType.STATE);
+                if (droneState.isArmed()) {
+                    drone.doGuidedTakeoff(10.0);  // TODO: Make the takeoff altitude appropriaately determined.
+                    Log.w("dbug", "Drone is flying");
+                } else {
+                    Log.w("dbug", "Drone is not armed");
+                    handler.postDelayed(this, 100);
+                }
+            }
+        };
+        handler.postDelayed(tryTakeoff, 100);
+    }
+
+    private void setupMapHAL(GoogleMap googleMap) {
 
         // For Drone Context Menu setup.
         View infoWindow = getActivity().getLayoutInflater().inflate(R.layout.drone_context_menu, null);
@@ -920,36 +940,15 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
             protected void onClickConfirmed(View v, Marker marker) {
                 Log.w("dbug:click", "Drone Takeoff Clicked!!");
                 Drone drone = getDroneApi();
+                State droneState = drone.getAttribute(AttributeType.STATE);
 
-                drone.arm(true);
-
-                // Handler handler = new Handler();
-                TextView textview = new TextView(getActivity());
-
-                textview.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Drone drone = getDroneApi();
-
-                        State droneState = drone.getAttribute(AttributeType.STATE);
-                        if (droneState.isArmed()) {
-                            drone.doGuidedTakeoff(10.0);
-                            Log.w("dbug", "Drone is flying");
-                        } else {
-                            Log.w("dbug", "Drone is not armed");
-                        }
-
-                    }
-                }, 5000);
-
-                drone.doGuidedTakeoff(10.0);
-
-                /** if (droneState.isArmed()) {
-                 drone.doGuidedTakeoff(10.0);
-                 } else {
-                 ((FlightActivity) getActivity()).showError("Drone must be armed before takeoff.");
-                 }
-                 **/
+                if(!droneState.isArmed()) {
+                    drone.arm(true);
+                    tryGuidedTakeoffHAL();
+                }
+                else {
+                    drone.doGuidedTakeoff(10.0);
+                }
                 // Here is where we arm the drone before taking off
             }
 
