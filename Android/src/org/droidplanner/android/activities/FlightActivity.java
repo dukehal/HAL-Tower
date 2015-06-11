@@ -9,14 +9,19 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 import android.widget.VideoView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -158,6 +163,7 @@ public class FlightActivity extends DrawerNavigationUI {
     private ImageButton mGoToMyLocation;
     private ImageButton mGoToDroneLocation;
     private ImageButton actionDrawerToggle;
+    private ToggleButton mVideoButton;
 
     @Override
     public void onDrawerClosed() {
@@ -212,7 +218,9 @@ public class FlightActivity extends DrawerNavigationUI {
 
         setupMapFragment();
 
-
+        //Enlarge video button
+        mVideoButton = (ToggleButton) findViewById(R.id.resize_video);
+        mVideoButton.setOnCheckedChangeListener(mOnCheckedChangeListener);
 
         mLocationButtonsContainer = findViewById(R.id.location_button_container);
         mVideoOverlayContainer = findViewById(R.id.videoFeedFragment);
@@ -547,5 +555,30 @@ public class FlightActivity extends DrawerNavigationUI {
         myVideoView.start();
 
     }
+
+    private void resizeFragment(Fragment f, int newWidth, int newHeight) {
+        if (f != null) {
+            View view = f.getView();
+            FrameLayout.LayoutParams p = new FrameLayout.LayoutParams(newWidth, newHeight);
+            view.setLayoutParams(p);
+            view.requestLayout();
+
+
+        }
+    }
+
+    private final CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
+            Log.d(TAG, "onCheckedChanged");
+            if (isChecked ) {
+                resizeFragment(videoFragment, 400, 400);
+            } else {
+                resizeFragment(videoFragment, 1000, 1000);
+
+            }
+
+        }
+    };
 
 }

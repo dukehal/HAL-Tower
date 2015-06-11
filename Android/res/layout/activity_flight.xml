@@ -61,17 +61,7 @@
             android:layout_alignRight="@+id/actionbar_container"
             android:layout_alignEnd="@+id/actionbar_container"
             />
-<!-- First try at video overlay, can be removed
-        <include
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            layout="@layout/video_overlay"
-            android:layout_marginTop="8dp"
-            android:layout_gravity="center_vertical|end"
-            android:layout_alignRight="@+id/actionbar_container"
-            android:layout_below="@+id/actionbar_container"
 
-            /> -->
         <!--<fragment android:name="org.droidplanner.android.fragments.VideoFeedFragment"-->
             <!--android:id="@+id/videoFeedFragment"-->
             <!--android:layout_width="210dp"-->
@@ -82,15 +72,27 @@
             <!--android:layout_below="@+id/actionbar_container"-->
             <!--/>-->
 
+        <ToggleButton
+            android:id="@+id/resize_video"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="false"
+            android:layout_alignParentBottom="true"
+            android:text="ToggleButton"
+            android:textOff="Enlarge Video"
+            android:textOn="Minimize Video"/>
+            <!--android:layout_below="@id/videoFeedFragment"-->
+
+
         <FrameLayout android:name="org.droidplanner.android.fragments.VideoFeedFragment"
             android:id="@+id/videoFeedFragment"
-            android:layout_width="210dp"
-            android:layout_height="200dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:layout_gravity="center_vertical|end"
-            android:layout_alignRight="@+id/actionbar_container"
+            android:layout_gravity="start"
             android:layout_below="@+id/actionbar_container"
             />
+        <!--android:layout_alignRight="@+id/actionbar_container"-->
 
     </RelativeLayout>
     <!-- Sliding layout -->

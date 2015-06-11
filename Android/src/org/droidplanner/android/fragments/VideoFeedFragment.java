@@ -64,7 +64,7 @@ public class VideoFeedFragment extends Fragment {
     private UVCCamera mUVCCamera;
     private UVCCameraTextureView mUVCCameraView;
 
-    //public boolean isConnected;
+
 
 
     // for open&start / stop&close camera preview
@@ -79,7 +79,7 @@ public class VideoFeedFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // retain this fragment
-        setRetainInstance(true);
+        //setRetainInstance(true);
 
     }
 
@@ -101,9 +101,9 @@ public class VideoFeedFragment extends Fragment {
 
         mUSBMonitor = new USBMonitor(getActivity(), mOnDeviceConnectListener);
 
-        //isConnected = false;
 
-        setRetainInstance(true);
+
+        //setRetainInstance(true);
 
         return view;
     }
@@ -113,36 +113,41 @@ public class VideoFeedFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
+
+
         mUSBMonitor.register();
         if (mUVCCamera != null)
             mUVCCamera.startPreview();
+            Log.d(TAG, "onResume Start Preview");
         updateItems();
     }
 
     @Override
     public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPauseStopCapture");
         if (mUVCCamera != null) {
-            //stopCapture();
-            //mUVCCamera.stopPreview();
+            stopCapture();
+            mUVCCamera.stopPreview();
         }
         mUSBMonitor.unregister();
-        super.onPause();
+
     }
 
     @Override
     public void onDestroy() {
         Log.d(TAG, "destroy!");
         if (mUVCCamera != null) {
-           // mUVCCamera.destroy();
-           // mUVCCamera = null;
+            mUVCCamera.destroy();
+            mUVCCamera = null;
         }
         if (mUSBMonitor != null) {
-           // mUSBMonitor.destroy();
-           // mUSBMonitor = null;
+            mUSBMonitor.destroy();
+            mUSBMonitor = null;
         }
         mCameraButton = null;
         mCaptureButton = null;
-        //mUVCCameraView = null;
+        mUVCCameraView = null;
         super.onDestroy();
 
     }
@@ -150,9 +155,11 @@ public class VideoFeedFragment extends Fragment {
     private final CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
+            Log.d(TAG, "OnCheckedChangeListenr");
             if (isChecked && mUVCCamera == null) {
                 CameraDialog.showDialog(getActivity());
             } else if (mUVCCamera != null) {
+
                 mUVCCamera.destroy();
                 mUVCCamera = null;
             }
@@ -176,17 +183,17 @@ public class VideoFeedFragment extends Fragment {
         public void onAttach(final UsbDevice device) {
             Toast.makeText(getActivity(), "USB_DEVICE_ATTACHED", Toast.LENGTH_SHORT).show();
 
-            //Log.d("isConnected=", String.valueOf(isConnected));
-            //if (!isConnected) {
-                //Log.d("VFF", "autoconnect Called");
-                //autoConnect(device);
 
-            //}
+                Log.d("VFF", "autoconnect Called");
+                autoConnect(device);
+
+
 
         }
 
         @Override
         public void onConnect(final UsbDevice device, final USBMonitor.UsbControlBlock ctrlBlock, final boolean createNew) {
+            Log.d(TAG, "OnConnect");
             if (mUVCCamera != null)
                 mUVCCamera.destroy();
             mUVCCamera = new UVCCamera();
@@ -206,6 +213,7 @@ public class VideoFeedFragment extends Fragment {
                             // fallback to YUV mode
                             mUVCCamera.setPreviewSize(UVCCamera.DEFAULT_PREVIEW_WIDTH, UVCCamera.DEFAULT_PREVIEW_HEIGHT, UVCCamera.DEFAULT_PREVIEW_MODE);
                         } catch (final IllegalArgumentException e1) {
+                            //Log.d(TAG, "OnCheckedChangeListenr");
                             mUVCCamera.destroy();
                             mUVCCamera = null;
                         }
@@ -259,7 +267,7 @@ public class VideoFeedFragment extends Fragment {
                 mUVCCamera.destroy();
                 mUVCCamera = null;
             }
-            Log.d("autoAttach","UpdateItems");
+            Log.d("autoConnect","UpdateItems");
             updateItems();
 
 
