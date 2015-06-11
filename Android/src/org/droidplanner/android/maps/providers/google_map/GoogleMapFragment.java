@@ -22,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -918,15 +919,38 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
             @Override
             protected void onClickConfirmed(View v, Marker marker) {
                 Log.w("dbug:click", "Drone Takeoff Clicked!!");
-
                 Drone drone = getDroneApi();
-                State vehicleState = drone.getAttribute(AttributeType.STATE);
-                if (vehicleState.isArmed()) {
-                    drone.doGuidedTakeoff(10.0);
-                } else {
-                    ((FlightActivity) getActivity()).showError("Drone must be armed before takeoff.");
-                }
 
+                drone.arm(true);
+
+                // Handler handler = new Handler();
+                TextView textview = new TextView(getActivity());
+
+                textview.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Drone drone = getDroneApi();
+
+                        State droneState = drone.getAttribute(AttributeType.STATE);
+                        if (droneState.isArmed()) {
+                            drone.doGuidedTakeoff(10.0);
+                            Log.w("dbug", "Drone is flying");
+                        } else {
+                            Log.w("dbug", "Drone is not armed");
+                        }
+
+                    }
+                }, 5000);
+
+                drone.doGuidedTakeoff(10.0);
+
+                /** if (droneState.isArmed()) {
+                 drone.doGuidedTakeoff(10.0);
+                 } else {
+                 ((FlightActivity) getActivity()).showError("Drone must be armed before takeoff.");
+                 }
+                 **/
+                // Here is where we arm the drone before taking off
             }
 
         };
