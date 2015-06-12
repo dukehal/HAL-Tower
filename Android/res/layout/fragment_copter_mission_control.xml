@@ -16,7 +16,9 @@
         <Button
             android:id="@+id/mc_connectBtn"
             style="@style/flightControlButton.Row"
-            android:drawableTop="@drawable/ic_connect_active"
+            android:drawableTop="@drawable/drone_link_disconnected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="@string/menu_connect"/>
 
     </android.support.v7.widget.CardView>
@@ -34,18 +36,20 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/mc_armBtn"
+                android:id="@+id/mc_connectedBtn"
                 style="@style/flightControlButton.Row"
-                android:drawableTop="@drawable/ic_arm_active"
-                android:text="@string/mission_control_arm"/>
+                android:drawableTop="@drawable/drone_link_connected"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <!--android:text="@string/mission_control_arm"/>
 
-            <Button
-                android:id="@+id/mc_dronieBtn"
-                style="@style/flightControlButton.Row"
-                android:drawableTop="@drawable/ic_dronie_active"
-                android:text="@string/mission_control_dronie"
-                />
-
+                        <Button
+                            android:id="@+id/mc_dronieBtn"
+                            style="@style/flightControlButton.Row"
+                            android:drawableTop="@drawable/ic_dronie_active"
+                            android:text="@string/mission_control_dronie"
+                            />
+            -->
         </LinearLayout>
     </android.support.v7.widget.CardView>
 
@@ -65,9 +69,11 @@
             <Button
                 android:id="@+id/mc_disarmBtn"
                 style="@style/flightControlButton.Row"
-                android:drawableTop="@drawable/ic_arm_active"
-                android:text="@string/mission_control_disarm"/>
-
+                android:drawableTop="@drawable/drone_link_connected"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <!--    android:text="@string/mission_control_disarm"/>
+-->
             <Button
                 android:id="@+id/mc_takeoff"
                 style="@style/flightControlButton.Row"
@@ -97,15 +103,16 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
+            <!-- changed mc_homeBtn to mc_conBtn -->
             <Button
-                android:id="@+id/mc_homeBtn"
+                android:id="@+id/mc_conBtn"
                 style="@style/flightControlButton.Row"
                 android:layout_width="75dp"
                 android:layout_height="match_parent"
-                android:drawableTop="@drawable/ic_home_active"
-                android:layout_weight="1"
-                android:text="@string/mission_control_home"/>
-
+                android:drawableTop="@drawable/drone_link_connected"
+                android:layout_weight="1" />
+            <!--    android:text="@string/mission_control_home"/>
+            -->
             <Button
                 android:id="@+id/mc_land"
                 style="@style/flightControlButton.Row"
