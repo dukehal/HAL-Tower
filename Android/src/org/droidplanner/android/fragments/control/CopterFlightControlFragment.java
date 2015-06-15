@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -173,7 +172,7 @@ public class CopterFlightControlFragment extends ApiListenerFragment implements 
         homeBtn = (Button) view.findViewById(R.id.mc_homeBtn);
         homeBtn.setOnClickListener(this);
 
-        final Button armBtn = (Button) view.findViewById(R.id.mc_armBtn);
+        final Button armBtn = (Button) view.findViewById(R.id.mc_disconnectBtn);
         armBtn.setOnClickListener(this);
 
         final Button disarmBtn = (Button) view.findViewById(R.id.mc_disarmBtn);
@@ -228,7 +227,7 @@ public class CopterFlightControlFragment extends ApiListenerFragment implements 
                 ((SuperUI) getActivity()).toggleDroneConnection();
                 break;
 
-            case R.id.mc_armBtn:
+            case R.id.mc_disconnectBtn:
            //     getArmingConfirmation();
                 eventBuilder.setAction(ACTION_FLIGHT_ACTION_BUTTON).setLabel("Arm");
                 ((SuperUI) getActivity()).toggleDroneConnection();

@@ -33,7 +33,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/mc_armBtn"
+                android:id="@+id/mc_disconnectBtn"
                 style="@style/flightControlButton.Row"
                 android:drawableTop="@drawable/drone_link_connected"/>
 
