@@ -47,9 +47,6 @@ public class GraphicDroneHAL extends GraphicDrone {
 
 		float angle = this.getRotation();
 		float viewingAngle = (this.map != null ? this.map.getCameraPosition().bearing : 0);
-		Log.w("dbug:info", "VIEWANGLE: " + viewingAngle);
-
-
 
 		double angleInRadians = (angle - viewingAngle) / 180.0 * Math.PI;
 		double xOffset = - Math.sin(angleInRadians) / 2.0 * scale + 0.5;
@@ -102,7 +99,6 @@ public class GraphicDroneHAL extends GraphicDrone {
 	@Override
 	public float getRotation() {
         Attitude attitude = drone.getAttribute(AttributeType.ATTITUDE);
-		Log.w("dbug:info", "ROTATION: " + (attitude == null ? 0 : (float) attitude.getYaw()));
 		return attitude == null ? 0 : (float) attitude.getYaw();
 	}
 
