@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TableLayout;
 import android.widget.Toast;
 
@@ -22,8 +23,10 @@ import com.o3dr.services.android.lib.drone.attribute.AttributeType;
 import com.o3dr.services.android.lib.drone.property.Gps;
 import com.o3dr.services.android.lib.drone.property.GuidedState;
 import com.o3dr.services.android.lib.drone.property.State;
+import com.o3dr.services.android.lib.drone.property.VehicleMode;
 
 import org.droidplanner.android.R;
+import org.droidplanner.android.activities.FlightActivity;
 import org.droidplanner.android.dialogs.GuidedDialog;
 import org.droidplanner.android.dialogs.GuidedDialog.GuidedDialogListener;
 import org.droidplanner.android.maps.DPMap;
@@ -32,7 +35,18 @@ import org.droidplanner.android.utils.DroneHelper;
 import org.droidplanner.android.utils.prefs.AutoPanMode;
 
 public class FlightMapFragment extends DroneMap implements DPMap.OnMapLongClickListener,
-        DPMap.OnMarkerClickListener, DPMap.OnMarkerDragListener, GuidedDialogListener {
+        DPMap.OnMarkerClickListener, DPMap.OnMarkerDragListener, GuidedDialogListener, View.OnClickListener {
+
+    @Override
+    public void onClick(View v) {
+        State vehicleState = this.drone.getAttribute(AttributeType.STATE);
+        if (vehicleState.isArmed()) {
+            drone.changeVehicleMode(VehicleMode.COPTER_RTL);
+        } else {
+            ((FlightActivity) getActivity()).showError("Drone is not armed.");
+        }
+
+    }
 
     public interface OnGuidedClickListener {
         void onGuidedClick(LatLong coord);
@@ -81,6 +95,10 @@ public class FlightMapFragment extends DroneMap implements DPMap.OnMapLongClickL
         mMapFragment.setOnMapLongClickListener(this);
         mMapFragment.setOnMarkerDragListener(this);
         mMapFragment.setOnMarkerClickListener(this);
+
+        ImageButton homeButton = (ImageButton) getActivity().findViewById(R.id.homeButtonInInfo);
+        homeButton.setOnClickListener(this);
+
         return view;
     }
 

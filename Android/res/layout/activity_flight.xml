@@ -62,14 +62,15 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp">
 
-            <ImageView
+            <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/imageView"
+                android:id="@+id/homeButtonInInfo"
                 android:src="@drawable/drone_2x2_home"
                 android:layout_below="@+id/linearLayout"
                 android:layout_alignLeft="@+id/linearLayout"
-                android:layout_alignStart="@+id/linearLayout" />
+                android:layout_alignStart="@+id/linearLayout"
+                android:background="@null" />
 
             <LinearLayout
                 android:orientation="horizontal"
