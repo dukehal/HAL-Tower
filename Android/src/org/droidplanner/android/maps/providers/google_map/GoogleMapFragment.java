@@ -965,7 +965,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
                 if (vehicleState.isArmed()) {
                     drone.changeVehicleMode(VehicleMode.COPTER_LAND);
                 } else {
-                    ((FlightActivity) getActivity()).showError("Drone is not armed.");
+                    ((FlightActivity) getActivity()).showError("Drone is on the ground.");
                 }
 
             }
