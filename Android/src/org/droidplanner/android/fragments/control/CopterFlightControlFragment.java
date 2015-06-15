@@ -173,7 +173,7 @@ public class CopterFlightControlFragment extends ApiListenerFragment implements 
         homeBtn = (Button) view.findViewById(R.id.mc_homeBtn);
         homeBtn.setOnClickListener(this);
 
-        final Button armBtn = (Button) view.findViewById(R.id.mc_connectedBtn); // changed mc_ArmBtn to mc_connectedBtn
+        final Button armBtn = (Button) view.findViewById(R.id.mc_armBtn);
         armBtn.setOnClickListener(this);
 
         final Button disarmBtn = (Button) view.findViewById(R.id.mc_disarmBtn);
@@ -197,8 +197,8 @@ public class CopterFlightControlFragment extends ApiListenerFragment implements 
         followBtn = (Button) view.findViewById(R.id.mc_follow);
         followBtn.setOnClickListener(this);
 
-      //  final Button dronieBtn = (Button) view.findViewById(R.id.mc_dronieBtn);
-      //  dronieBtn.setOnClickListener(this);
+       // final Button dronieBtn = (Button) view.findViewById(R.id.mc_dronieBtn);
+       // dronieBtn.setOnClickListener(this);
     }
 
     @Override
@@ -228,8 +228,8 @@ public class CopterFlightControlFragment extends ApiListenerFragment implements 
                 ((SuperUI) getActivity()).toggleDroneConnection();
                 break;
 
-            case R.id.mc_connectedBtn:
-               // getArmingConfirmation();
+            case R.id.mc_armBtn:
+           //     getArmingConfirmation();
                 eventBuilder.setAction(ACTION_FLIGHT_ACTION_BUTTON).setLabel("Arm");
                 break;
 
@@ -286,10 +286,10 @@ public class CopterFlightControlFragment extends ApiListenerFragment implements 
                 }
                 break;
 
-          //  case R.id.mc_dronieBtn:
-            //    getDronieConfirmation();
-            //    eventBuilder.setAction(ACTION_FLIGHT_ACTION_BUTTON).setLabel("Dronie uploaded");
-            //    break;
+           // case R.id.mc_dronieBtn:
+           //     getDronieConfirmation();
+           //     eventBuilder.setAction(ACTION_FLIGHT_ACTION_BUTTON).setLabel("Dronie uploaded");
+           //     break;
 
             default:
                 eventBuilder = null;
@@ -343,7 +343,7 @@ public class CopterFlightControlFragment extends ApiListenerFragment implements 
         unlockDialog.show(getChildFragmentManager(), "Slide to take off in auto");
     }
 
-    private void getArmingConfirmation() {
+ /*   private void getArmingConfirmation() {
         SlideToUnlockDialog unlockDialog = SlideToUnlockDialog.newInstance("arm", new Runnable() {
             @Override
             public void run() {
@@ -352,7 +352,7 @@ public class CopterFlightControlFragment extends ApiListenerFragment implements 
         }) ;
         unlockDialog.show(getChildFragmentManager(), "Slide To Arm");
     }
-
+   */
     private void updateFlightModeButtons() {
         resetFlightModeButtons();
 
