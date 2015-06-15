@@ -74,6 +74,7 @@ import org.droidplanner.android.DroidPlannerApp;
 import org.droidplanner.android.R;
 import org.droidplanner.android.activities.FlightActivity;
 import org.droidplanner.android.fragments.SettingsFragment;
+import org.droidplanner.android.graphic.map.GraphicDroneHAL;
 import org.droidplanner.android.hal.listeners.OnInfoWindowElemTouchListener;
 import org.droidplanner.android.hal.wrappers.MapWrapperLayout;
 import org.droidplanner.android.helpers.LocalMapTileProvider;
@@ -487,6 +488,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
         Log.w("dbug:info", "Value of markerInfo.getClass().getSimpleName(): " + markerInfo.getClass().getSimpleName());
         if (markerInfo.getClass().getSimpleName().equals("GraphicDroneHAL")) {
             Log.w("dbug:info", "Found graphic drone in marker generation!");
+            ((GraphicDroneHAL)markerInfo).initMap(getMap());
         }
 
         Marker marker = getMap().addMarker(markerOptions);

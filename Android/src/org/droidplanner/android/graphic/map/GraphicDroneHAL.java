@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.o3dr.android.client.Drone;
 import com.o3dr.services.android.lib.coordinate.LatLong;
 import com.o3dr.services.android.lib.drone.attribute.AttributeType;
@@ -16,8 +17,14 @@ import org.droidplanner.android.maps.MarkerInfo;
 
 public class GraphicDroneHAL extends GraphicDrone {
 
+	private GoogleMap map;
+
 	public GraphicDroneHAL(Drone drone) {
 		super(drone);
+	}
+
+	public void initMap(GoogleMap map) {
+		this.map = map;
 	}
 
 	@Override
@@ -39,7 +46,12 @@ public class GraphicDroneHAL extends GraphicDrone {
 		double scale = 1.5;
 
 		float angle = this.getRotation();
-		double angleInRadians = angle / 180.0 * Math.PI;
+		float viewingAngle = (this.map != null ? this.map.getCameraPosition().bearing : 0);
+		Log.w("dbug:info", "VIEWANGLE: " + viewingAngle);
+
+
+
+		double angleInRadians = (angle - viewingAngle) / 180.0 * Math.PI;
 		double xOffset = - Math.sin(angleInRadians) / 2.0 * scale + 0.5;
 
 		return (float) xOffset;
@@ -54,7 +66,9 @@ public class GraphicDroneHAL extends GraphicDrone {
 		double scale = 1.5;
 
 		float angle = this.getRotation();
-		double angleInRadians = angle / 180.0 * Math.PI;
+		float viewingAngle = (this.map != null ? this.map.getCameraPosition().bearing : 0);
+
+		double angleInRadians = (angle - viewingAngle) / 180.0 * Math.PI;
 		double yOffset = 0.5 - Math.cos(angleInRadians) / 2.0 * scale;
 
 		return (float) yOffset;
