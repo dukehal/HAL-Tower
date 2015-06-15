@@ -170,7 +170,7 @@ public class FlightMapFragment extends DroneMap implements DPMap.OnMapLongClickL
         if(markerInfo == null)
             return false;
 
-        Log.w("dbug Title: ", markerInfo.getPosition().toString());
+    //    Log.w("dbug Title: ", markerInfo.getPosition().toString());
 
         if (markerInfo == this.graphicDrone) {
             Log.w("dbug Title: ", "You clicked the DRONE ICON!!!!");
