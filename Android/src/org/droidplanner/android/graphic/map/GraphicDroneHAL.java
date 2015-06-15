@@ -35,17 +35,12 @@ public class GraphicDroneHAL extends GraphicDrone {
 		// Pretend Origin is at center of the square marker icon,
 		// and the side length of the square is 2, so that a bounded
 		// circle has radius 1.
-//		float angle = this.getRotation();
-//		double angleInRadians = -angle / 180.0 * Math.PI;
-//		double xOffset = - Math.sin(angleInRadians);
-//		xOffset = xOffset / 2 + 0.5;
 
 		double scale = 1.5;
 
 		float angle = this.getRotation();
 		double angleInRadians = angle / 180.0 * Math.PI;
 		double xOffset = - Math.sin(angleInRadians) / 2.0 * scale + 0.5;
-//		xOffset = xOffset / 2 + 0.5;
 
 		return (float) xOffset;
 	}
@@ -55,10 +50,6 @@ public class GraphicDroneHAL extends GraphicDrone {
 		// Pretend Origin is at center of the square marker icon,
 		// and the side length of the square is 2, so that a bounded
 		// circle has radius 1.
-//		float angle = this.getRotation();
-//		double angleInRadians = -angle / 180.0 * Math.PI;
-//		double yOffset = - Math.cos(angleInRadians);
-//		yOffset = -1 * yOffset / 2 + 0.5;
 
 		double scale = 1.5;
 
