@@ -196,8 +196,9 @@ public class CopterFlightControlFragment extends ApiListenerFragment implements 
         followBtn = (Button) view.findViewById(R.id.mc_follow);
         followBtn.setOnClickListener(this);
 
-       // final Button dronieBtn = (Button) view.findViewById(R.id.mc_dronieBtn);
-       // dronieBtn.setOnClickListener(this);
+        final Button dronieBtn = (Button) view.findViewById(R.id.mc_dronieBtn);
+        dronieBtn.setOnClickListener(this);
+
     }
 
     @Override
@@ -228,7 +229,8 @@ public class CopterFlightControlFragment extends ApiListenerFragment implements 
                 break;
 
             case R.id.mc_disconnectBtn:
-           //     getArmingConfirmation();
+                // This was formerly the arm button. It is now the "disconnect" from drone button.
+                // getArmingConfirmation();
                 eventBuilder.setAction(ACTION_FLIGHT_ACTION_BUTTON).setLabel("Arm");
                 ((SuperUI) getActivity()).toggleDroneConnection();
                 break;
@@ -286,10 +288,10 @@ public class CopterFlightControlFragment extends ApiListenerFragment implements 
                 }
                 break;
 
-           // case R.id.mc_dronieBtn:
-           //     getDronieConfirmation();
-           //     eventBuilder.setAction(ACTION_FLIGHT_ACTION_BUTTON).setLabel("Dronie uploaded");
-           //     break;
+            case R.id.mc_dronieBtn:
+                getDronieConfirmation();
+                eventBuilder.setAction(ACTION_FLIGHT_ACTION_BUTTON).setLabel("Dronie uploaded");
+                break;
 
             default:
                 eventBuilder = null;
@@ -343,7 +345,9 @@ public class CopterFlightControlFragment extends ApiListenerFragment implements 
         unlockDialog.show(getChildFragmentManager(), "Slide to take off in auto");
     }
 
- /*   private void getArmingConfirmation() {
+    /* No longer used by HAL version. (Arming is immediate upon takeoff command.)
+
+    private void getArmingConfirmation() {
         SlideToUnlockDialog unlockDialog = SlideToUnlockDialog.newInstance("arm", new Runnable() {
             @Override
             public void run() {
@@ -352,7 +356,9 @@ public class CopterFlightControlFragment extends ApiListenerFragment implements 
         }) ;
         unlockDialog.show(getChildFragmentManager(), "Slide To Arm");
     }
-   */
+
+    */
+
     private void updateFlightModeButtons() {
         resetFlightModeButtons();
 
