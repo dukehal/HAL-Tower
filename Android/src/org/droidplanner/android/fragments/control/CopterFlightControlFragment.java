@@ -231,6 +231,7 @@ public class CopterFlightControlFragment extends ApiListenerFragment implements 
             case R.id.mc_armBtn:
            //     getArmingConfirmation();
                 eventBuilder.setAction(ACTION_FLIGHT_ACTION_BUTTON).setLabel("Arm");
+                ((SuperUI) getActivity()).toggleDroneConnection();
                 break;
 
             case R.id.mc_disarmBtn:
