@@ -138,7 +138,7 @@ public class CopterFlightControlFragment extends ApiListenerFragment implements 
     private MissionProxy missionProxy;
 
     private View mDisconnectedButtons;
-    private View mDisarmedButtons;
+    private View mConnectedButtons;
     private View mArmedButtons;
     private View mInFlightButtons;
 
@@ -162,7 +162,7 @@ public class CopterFlightControlFragment extends ApiListenerFragment implements 
         orangeColor = getResources().getColor(R.color.orange);
 
         mDisconnectedButtons = view.findViewById(R.id.mc_disconnected_buttons);
-        mDisarmedButtons = view.findViewById(R.id.mc_disarmed_buttons);
+        mConnectedButtons = view.findViewById(R.id.mc_connected_buttons);
         mArmedButtons = view.findViewById(R.id.mc_armed_buttons);
         mInFlightButtons = view.findViewById(R.id.mc_in_flight_buttons);
 
@@ -427,7 +427,7 @@ public class CopterFlightControlFragment extends ApiListenerFragment implements 
 
     private void resetButtonsContainerVisibility() {
         mDisconnectedButtons.setVisibility(View.GONE);
-        mDisarmedButtons.setVisibility(View.GONE);
+        mConnectedButtons.setVisibility(View.GONE);
         mArmedButtons.setVisibility(View.GONE);
         mInFlightButtons.setVisibility(View.GONE);
     }
@@ -456,17 +456,21 @@ public class CopterFlightControlFragment extends ApiListenerFragment implements 
 
     private void setupButtonsForDisarmed() {
         resetButtonsContainerVisibility();
-        mDisarmedButtons.setVisibility(View.VISIBLE);
+        mConnectedButtons.setVisibility(View.VISIBLE);
     }
 
     private void setupButtonsForArmed() {
         resetButtonsContainerVisibility();
-        mArmedButtons.setVisibility(View.VISIBLE);
+        // Maintain visibility of 'connected' button. Do not show the original 'armed' buttons.
+        mConnectedButtons.setVisibility(View.VISIBLE);
+        // mArmedButtons.setVisibility(View.VISIBLE);
     }
 
     private void setupButtonsForFlying() {
         resetButtonsContainerVisibility();
-        mInFlightButtons.setVisibility(View.VISIBLE);
+        // Maintain visibility of 'connected' button. Do not show the original 'armed' buttons.
+        mConnectedButtons.setVisibility(View.VISIBLE);
+        // mInFlightButtons.setVisibility(View.VISIBLE);
     }
 
     @Override
