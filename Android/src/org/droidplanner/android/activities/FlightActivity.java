@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -19,10 +18,8 @@ import android.view.ViewTreeObserver;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.ToggleButton;
-import android.widget.VideoView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -146,6 +143,7 @@ public class FlightActivity extends DrawerNavigationUI {
 
     private final Handler handler = new Handler();
 
+    //Declare the fragment manager to control the video fragment
     private FragmentManager fragmentManager;
 
     private TextView warningView;
@@ -206,9 +204,6 @@ public class FlightActivity extends DrawerNavigationUI {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flight);
-
-        //Call to play video overlayed on map
-        //playVideo();
 
 
         fragmentManager = getSupportFragmentManager();
@@ -293,6 +288,7 @@ public class FlightActivity extends DrawerNavigationUI {
             videoFragment = new VideoFeedFragment();
             fragmentManager.beginTransaction().add(R.id.videoFeedFragment, videoFragment).commit();
         }
+
 
         mFlightActionsView = findViewById(R.id.flightActionsFragment);
         mFlightActionsView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver
@@ -541,20 +537,7 @@ public class FlightActivity extends DrawerNavigationUI {
         }
     }
 
-    //Function to play the video overlay on the map
-    private void playVideo() {
 
-        //Connect to XML file
-        VideoView myVideoView = (VideoView)findViewById(R.id.myvideoview);
-        //Set video source
-        String uri = "android.resource://" + getPackageName() + "/" + R.raw.samplevid;
-        //Set up and play video
-        myVideoView.setVideoURI(Uri.parse(uri));
-        myVideoView.setMediaController(new MediaController(this));
-        myVideoView.requestFocus();
-        myVideoView.start();
-
-    }
 
     private void resizeFragment(Fragment f, int newWidth, int newHeight) {
         if (f != null) {
@@ -567,14 +550,16 @@ public class FlightActivity extends DrawerNavigationUI {
         }
     }
 
+    int smallVid = 400; //in pixels
+    int largeVid = 1000; //in pixels
     private final CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
             Log.d(TAG, "onCheckedChanged");
             if (isChecked ) {
-                resizeFragment(videoFragment, 400, 400);
+                resizeFragment(videoFragment, largeVid, largeVid);
             } else {
-                resizeFragment(videoFragment, 1000, 1000);
+                resizeFragment(videoFragment, smallVid, smallVid);
 
             }
 
