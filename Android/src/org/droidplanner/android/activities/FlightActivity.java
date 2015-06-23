@@ -161,7 +161,11 @@ public class FlightActivity extends DrawerNavigationUI {
     private ImageButton mGoToMyLocation;
     private ImageButton mGoToDroneLocation;
     private ImageButton actionDrawerToggle;
-    private ToggleButton mVideoButton;
+    private ToggleButton mVideoButtonResize;
+    private ToggleButton mVideoButtonHide;
+
+
+
 
     @Override
     public void onDrawerClosed() {
@@ -214,8 +218,12 @@ public class FlightActivity extends DrawerNavigationUI {
         setupMapFragment();
 
         //Enlarge video button
-        mVideoButton = (ToggleButton) findViewById(R.id.resize_video);
-        mVideoButton.setOnCheckedChangeListener(mOnCheckedChangeListener);
+        mVideoButtonResize = (ToggleButton) findViewById(R.id.resize_video);
+        mVideoButtonResize.setOnCheckedChangeListener(mOnCheckedChangeListenerResize);
+
+        //Hide video button
+        mVideoButtonHide = (ToggleButton) findViewById(R.id.hide_video);
+        mVideoButtonHide.setOnCheckedChangeListener(mOnCheckedChangeListenerHide);
 
         mLocationButtonsContainer = findViewById(R.id.location_button_container);
         mVideoOverlayContainer = findViewById(R.id.videoFeedFragment);
@@ -328,6 +336,7 @@ public class FlightActivity extends DrawerNavigationUI {
 
         if (isActionDrawerOpened)
             openActionDrawer();
+
     }
 
     @Override
@@ -539,7 +548,7 @@ public class FlightActivity extends DrawerNavigationUI {
 
 
 
-    private void resizeFragment(Fragment f, int newWidth, int newHeight) {
+   private void resizeFragment(Fragment f, int newWidth, int newHeight) {
         if (f != null) {
             View view = f.getView();
             FrameLayout.LayoutParams p = new FrameLayout.LayoutParams(newWidth, newHeight);
@@ -550,17 +559,51 @@ public class FlightActivity extends DrawerNavigationUI {
         }
     }
 
-    int smallVid = 400; //in pixels
-    int largeVid = 1000; //in pixels
-    private final CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
+    int smallVidWidth = 400; //in pixels
+    int smallVidHeight = 400; //in pixels
+
+    int largeVidWidth = 1000; //in pixels
+    int largeVidHeight = 830; //in pixels
+
+    private final CompoundButton.OnCheckedChangeListener mOnCheckedChangeListenerResize = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
             Log.d(TAG, "onCheckedChanged");
             if (isChecked ) {
-                resizeFragment(videoFragment, largeVid, largeVid);
-            } else {
-                resizeFragment(videoFragment, smallVid, smallVid);
+                resizeFragment(videoFragment, largeVidWidth, largeVidHeight);
 
+                //Use this code instead of resize fragment to make the video as large as possible by wrapping content
+//                View view = videoFragment.getView();
+//                FrameLayout.LayoutParams p = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//                view.setLayoutParams(p);
+//                view.requestLayout();
+
+            } else {
+                resizeFragment(videoFragment, smallVidWidth, smallVidHeight);
+            }
+
+        }
+    };
+
+
+    private final CompoundButton.OnCheckedChangeListener mOnCheckedChangeListenerHide = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
+            Log.d(TAG, "onCheckedChangedHide");
+            if (isChecked ) {
+
+                resizeFragment(videoFragment, 0, 0);
+
+
+            } else {
+                resizeFragment(videoFragment, smallVidWidth, smallVidHeight);
+
+
+                //Use this code instead of resize fragment to make the video as large as possible by wrapping content
+//                View view = videoFragment.getView();
+//                FrameLayout.LayoutParams p = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//                view.setLayoutParams(p);
+//                view.requestLayout();
             }
 
         }

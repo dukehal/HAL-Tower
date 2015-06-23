@@ -57,20 +57,11 @@
             layout="@layout/button_my_location"
             android:layout_marginTop="8dp"
             android:layout_gravity="center_vertical|end"
-            android:layout_below="@+id/videoFeedFragment"
+            android:layout_below="@+id/actionbar_container"
             android:layout_alignRight="@+id/actionbar_container"
             android:layout_alignEnd="@+id/actionbar_container"
             />
 
-        <!--<fragment android:name="org.droidplanner.android.fragments.VideoFeedFragment"-->
-            <!--android:id="@+id/videoFeedFragment"-->
-            <!--android:layout_width="210dp"-->
-            <!--android:layout_height="200dp"-->
-            <!--android:layout_marginTop="8dp"-->
-            <!--android:layout_gravity="center_vertical|end"-->
-            <!--android:layout_alignRight="@+id/actionbar_container"-->
-            <!--android:layout_below="@+id/actionbar_container"-->
-            <!--/>-->
 
         <ToggleButton
             android:id="@+id/resize_video"
@@ -82,7 +73,17 @@
             android:textOff="Enlarge Video"
             android:textOn="Minimize Video"/>
             <!--android:layout_below="@id/videoFeedFragment"-->
+        <ToggleButton
+            android:id="@+id/hide_video"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@+id/resize_video"
+            android:text="ToggleButton"
+            android:textOff="Hide Video"
+            android:textOn="Show Video"/>
 
+        <!--android:layout_below="@id/videoFeedFragment"-->
 
         <FrameLayout android:name="org.droidplanner.android.fragments.VideoFeedFragment"
             android:id="@+id/videoFeedFragment"

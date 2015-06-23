@@ -1,11 +1,11 @@
 package org.droidplanner.android.fragments;
 
 
-import android.support.v4.app.Fragment;
 import android.graphics.SurfaceTexture;
 import android.hardware.usb.UsbDevice;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -63,7 +64,7 @@ public class VideoFeedFragment extends Fragment {
     private static USBMonitor mUSBMonitor;
     private UVCCamera mUVCCamera;
     private UVCCameraTextureView mUVCCameraView;
-
+    private Toast toastMessage;
 
 
 
@@ -75,11 +76,13 @@ public class VideoFeedFragment extends Fragment {
     private int mCaptureState = 0;
     private Surface mPreviewSurface;
 
+    private ProgressBar mProgress;
+    private int mProgressStatus = 0;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // retain this fragment
-        //setRetainInstance(true);
+
 
     }
 
@@ -101,6 +104,7 @@ public class VideoFeedFragment extends Fragment {
 
         mUSBMonitor = new USBMonitor(getActivity(), mOnDeviceConnectListener);
 
+        mProgress = (ProgressBar) view.findViewById(R.id.progress_bar);
 
 
         //setRetainInstance(true);
@@ -184,8 +188,8 @@ public class VideoFeedFragment extends Fragment {
             Toast.makeText(getActivity(), "USB_DEVICE_ATTACHED", Toast.LENGTH_SHORT).show();
 
 
-                Log.d("VFF", "autoconnect Called");
-                autoConnect(device);
+                //Log.d("VFF", "autoconnect Called");
+                //autoConnect(device);
 
 
 
@@ -193,6 +197,10 @@ public class VideoFeedFragment extends Fragment {
 
         @Override
         public void onConnect(final UsbDevice device, final USBMonitor.UsbControlBlock ctrlBlock, final boolean createNew) {
+
+            toastMessage = Toast.makeText(getActivity(), "UVC Libraries Loading", Toast.LENGTH_LONG);
+            toastMessage.show();
+            
             Log.d(TAG, "OnConnect");
             if (mUVCCamera != null)
                 mUVCCamera.destroy();
@@ -225,8 +233,11 @@ public class VideoFeedFragment extends Fragment {
                         mUVCCamera.setPreviewDisplay(mPreviewSurface);
                         mUVCCamera.startPreview();
                     }
+
+            toastMessage.cancel();
                 }
             });
+
 
         }
 
