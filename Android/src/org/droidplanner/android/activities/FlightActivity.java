@@ -8,15 +8,18 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -28,9 +31,10 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.droidplanner.android.R;
 import org.droidplanner.android.fragments.DroneMap;
-import org.droidplanner.android.fragments.control.FlightControlManagerFragment;
 import org.droidplanner.android.fragments.FlightMapFragment;
 import org.droidplanner.android.fragments.TelemetryFragment;
+import org.droidplanner.android.fragments.VideoFeedFragment;
+import org.droidplanner.android.fragments.control.FlightControlManagerFragment;
 import org.droidplanner.android.fragments.mode.FlightModePanel;
 import org.droidplanner.android.utils.prefs.AutoPanMode;
 
@@ -139,6 +143,7 @@ public class FlightActivity extends DrawerNavigationUI {
 
     private final Handler handler = new Handler();
 
+    //Declare the fragment manager to control the video fragment
     private FragmentManager fragmentManager;
 
     private TextView warningView;
@@ -146,14 +151,21 @@ public class FlightActivity extends DrawerNavigationUI {
     private FlightMapFragment mapFragment;
     private FlightControlManagerFragment flightActions;
     private TelemetryFragment telemetryFragment;
+    private VideoFeedFragment videoFragment;
 
     private SlidingUpPanelLayout mSlidingPanel;
     private View mFlightActionsView;
 
     private View mLocationButtonsContainer;
+    private View mVideoOverlayContainer;
     private ImageButton mGoToMyLocation;
     private ImageButton mGoToDroneLocation;
     private ImageButton actionDrawerToggle;
+    private ToggleButton mVideoButtonResize;
+    private ToggleButton mVideoButtonHide;
+
+
+
 
     @Override
     public void onDrawerClosed() {
@@ -169,6 +181,7 @@ public class FlightActivity extends DrawerNavigationUI {
             final int slidingDrawerWidth = telemetryView.getWidth();
             final boolean isSlidingDrawerOpened = isActionDrawerOpened();
             updateLocationButtonsMargin(isSlidingDrawerOpened, slidingDrawerWidth);
+            updateVideoOverlayMargin(isSlidingDrawerOpened, slidingDrawerWidth);
         }
     }
 
@@ -187,6 +200,7 @@ public class FlightActivity extends DrawerNavigationUI {
             final int slidingDrawerWidth = telemetryView.getWidth();
             final boolean isSlidingDrawerOpened = isActionDrawerOpened();
             updateLocationButtonsMargin(isSlidingDrawerOpened, slidingDrawerWidth);
+            updateVideoOverlayMargin(isSlidingDrawerOpened, slidingDrawerWidth);
         }
     }
 
@@ -195,6 +209,7 @@ public class FlightActivity extends DrawerNavigationUI {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flight);
 
+
         fragmentManager = getSupportFragmentManager();
 
         mSlidingPanel = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer);
@@ -202,7 +217,16 @@ public class FlightActivity extends DrawerNavigationUI {
 
         setupMapFragment();
 
+        //Enlarge video button
+        mVideoButtonResize = (ToggleButton) findViewById(R.id.resize_video);
+        mVideoButtonResize.setOnCheckedChangeListener(mOnCheckedChangeListenerResize);
+
+        //Hide video button
+        mVideoButtonHide = (ToggleButton) findViewById(R.id.hide_video);
+        mVideoButtonHide.setOnCheckedChangeListener(mOnCheckedChangeListenerHide);
+
         mLocationButtonsContainer = findViewById(R.id.location_button_container);
+        mVideoOverlayContainer = findViewById(R.id.videoFeedFragment);
         mGoToMyLocation = (ImageButton) findViewById(R.id.my_location_button);
         mGoToDroneLocation = (ImageButton) findViewById(R.id.drone_location_button);
         actionDrawerToggle = (ImageButton) findViewById(R.id.toggle_action_drawer);
@@ -266,6 +290,14 @@ public class FlightActivity extends DrawerNavigationUI {
             fragmentManager.beginTransaction().add(R.id.flightActionsFragment, flightActions).commit();
         }
 
+        //added to tower to make video fragment dynamic
+        videoFragment = (VideoFeedFragment) fragmentManager.findFragmentById(R.id.videoFeedFragment);
+        if (videoFragment == null) {
+            videoFragment = new VideoFeedFragment();
+            fragmentManager.beginTransaction().add(R.id.videoFeedFragment, videoFragment).commit();
+        }
+
+
         mFlightActionsView = findViewById(R.id.flightActionsFragment);
         mFlightActionsView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver
                 .OnGlobalLayoutListener() {
@@ -304,6 +336,7 @@ public class FlightActivity extends DrawerNavigationUI {
 
         if (isActionDrawerOpened)
             openActionDrawer();
+
     }
 
     @Override
@@ -437,6 +470,7 @@ public class FlightActivity extends DrawerNavigationUI {
         if (telemetryView != null) {
             final int slidingDrawerWidth = telemetryView.getWidth();
             updateLocationButtonsMargin(isActionDrawerOpened(), slidingDrawerWidth);
+            updateVideoOverlayMargin(isActionDrawerOpened(), slidingDrawerWidth);
         }
     }
 
@@ -452,6 +486,16 @@ public class FlightActivity extends DrawerNavigationUI {
         final int rightMargin = isOpened ? marginLp.leftMargin + drawerWidth : marginLp.leftMargin;
         marginLp.setMargins(marginLp.leftMargin, marginLp.topMargin, rightMargin, marginLp.bottomMargin);
         mLocationButtonsContainer.requestLayout();
+    }
+
+    private void updateVideoOverlayMargin(boolean isOpened, int drawerWidth) {
+
+        // Update the right margin for the my location button
+        final ViewGroup.MarginLayoutParams marginLp = (ViewGroup.MarginLayoutParams) mVideoOverlayContainer.getLayoutParams();
+        final int rightMargin = isOpened ? marginLp.leftMargin + drawerWidth : marginLp.leftMargin;
+        marginLp.setMargins(marginLp.leftMargin, marginLp.topMargin, rightMargin, marginLp.bottomMargin);
+        mVideoOverlayContainer.requestLayout();
+
     }
 
     private void enableSlidingUpPanel(Drone api) {
@@ -509,4 +553,67 @@ public class FlightActivity extends DrawerNavigationUI {
         warningView.setVisibility(View.VISIBLE);
         handler.postDelayed(hideWarningView, WARNING_VIEW_DISPLAY_TIMEOUT);
     }
+
+
+   private void resizeFragment(Fragment f, int newWidth, int newHeight) {
+        if (f != null) {
+            View view = f.getView();
+            FrameLayout.LayoutParams p = new FrameLayout.LayoutParams(newWidth, newHeight);
+            view.setLayoutParams(p);
+            view.requestLayout();
+
+
+        }
+    }
+
+    int smallVidWidth = 400; //in pixels
+    int smallVidHeight = 400; //in pixels
+
+    int largeVidWidth = 1000; //in pixels
+    int largeVidHeight = 830; //in pixels
+
+    private final CompoundButton.OnCheckedChangeListener mOnCheckedChangeListenerResize = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
+            Log.d(TAG, "onCheckedChanged");
+            if (isChecked ) {
+                resizeFragment(videoFragment, largeVidWidth, largeVidHeight);
+
+                //Use this code instead of resize fragment to make the video as large as possible by wrapping content
+//                View view = videoFragment.getView();
+//                FrameLayout.LayoutParams p = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//                view.setLayoutParams(p);
+//                view.requestLayout();
+
+            } else {
+                resizeFragment(videoFragment, smallVidWidth, smallVidHeight);
+            }
+
+        }
+    };
+
+
+    private final CompoundButton.OnCheckedChangeListener mOnCheckedChangeListenerHide = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
+            Log.d(TAG, "onCheckedChangedHide");
+            if (isChecked ) {
+
+                resizeFragment(videoFragment, 0, 0);
+
+
+            } else {
+                resizeFragment(videoFragment, smallVidWidth, smallVidHeight);
+
+
+                //Use this code instead of resize fragment to make the video as large as possible by wrapping content
+//                View view = videoFragment.getView();
+//                FrameLayout.LayoutParams p = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//                view.setLayoutParams(p);
+//                view.requestLayout();
+            }
+
+        }
+    };
+
 }
