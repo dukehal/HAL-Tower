@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,7 @@ import com.o3dr.services.android.lib.drone.mission.item.spatial.BaseSpatialItem;
 import org.droidplanner.android.R;
 import org.droidplanner.android.dialogs.YesNoDialog;
 import org.droidplanner.android.fragments.helpers.ApiListenerFragment;
+import org.droidplanner.android.hal.fragments.AltitudeProfileFragment;
 import org.droidplanner.android.proxy.mission.MissionProxy;
 import org.droidplanner.android.proxy.mission.item.MissionItemProxy;
 import org.droidplanner.android.proxy.mission.item.adapters.AdapterMissionItems;
@@ -389,6 +391,8 @@ public class EditorToolsFragment extends ApiListenerFragment implements OnClickL
         protected MissionProxy missionProxy;
         protected final EditorToolsFragment editorToolsFragment;
 
+        protected AltitudeProfileFragment addAltitudePointListener; // (HAL)
+
         EditorToolsImpl(EditorToolsFragment fragment) {
             this.editorToolsFragment = fragment;
         }
@@ -429,6 +433,11 @@ public class EditorToolsFragment extends ApiListenerFragment implements OnClickL
 
         public abstract void setup();
 
+        // (HAL)
+        public void setAddAltitudePointListener(AltitudeProfileFragment altitudeProfileFragment) {
+            this.addAltitudePointListener = altitudeProfileFragment;
+        }
+
     }
 
     private static class MarkerToolsImpl extends EditorToolsImpl implements AdapterView.OnItemSelectedListener {
@@ -466,6 +475,7 @@ public class EditorToolsFragment extends ApiListenerFragment implements OnClickL
 
         @Override
         public void onMapClick(LatLong point) {
+            Log.w("dbug", "Editor imp onMapClick");
             if (missionProxy == null) return;
 
             // If an mission item is selected, unselect it.
@@ -476,6 +486,10 @@ public class EditorToolsFragment extends ApiListenerFragment implements OnClickL
 
             BaseSpatialItem spatialItem = (BaseSpatialItem) selectedType.getNewItem();
             missionProxy.addSpatialWaypoint(spatialItem, point);
+
+            // (HAL)
+            this.addAltitudePointListener.AddPoint(point);
+
         }
 
         @Override
@@ -783,5 +797,6 @@ public class EditorToolsFragment extends ApiListenerFragment implements OnClickL
             selectAll();
             editorToolsFragment.selectorPopup.dismiss();
         }
+
     }
 }

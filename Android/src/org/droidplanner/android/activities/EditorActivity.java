@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.Menu;
@@ -36,6 +37,7 @@ import org.droidplanner.android.fragments.EditorToolsFragment;
 import org.droidplanner.android.fragments.EditorToolsFragment.EditorTools;
 import org.droidplanner.android.fragments.helpers.GestureMapFragment;
 import org.droidplanner.android.fragments.helpers.GestureMapFragment.OnPathFinishedListener;
+import org.droidplanner.android.hal.fragments.AltitudeProfileFragment;
 import org.droidplanner.android.proxy.mission.MissionProxy;
 import org.droidplanner.android.proxy.mission.MissionSelection;
 import org.droidplanner.android.proxy.mission.item.MissionItemProxy;
@@ -161,6 +163,11 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
 
         gestureMapFragment.setOnPathFinishedListener(this);
         openActionDrawer();
+
+        // HAL: Altitude Profile
+        AltitudeProfileFragment altitudeProfileFragment = (AltitudeProfileFragment) fragmentManager.findFragmentById(R.id.altitude_profile_fragment);
+        getToolImpl().setAddAltitudePointListener(altitudeProfileFragment);
+
     }
 
     @Override
@@ -386,6 +393,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
 
     @Override
     public void onMapClick(LatLong point) {
+        Log.w("dbug", "EditorActivity onMapClick");
         EditorToolsFragment.EditorToolsImpl toolImpl = getToolImpl();
         toolImpl.onMapClick(point);
     }
@@ -477,6 +485,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         List<LatLong> points = planningMapFragment.projectPathIntoMap(path);
         EditorToolsFragment.EditorToolsImpl toolImpl = getToolImpl();
         toolImpl.onPathFinished(points);
+        Log.w("dbug", "Added again!");
     }
 
     @Override

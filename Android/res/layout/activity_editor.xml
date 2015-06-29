@@ -74,7 +74,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:name="org.droidplanner.android.hal.fragments.AltitudeProfileFragment"
-            android:id="@+id/fragment"
+            android:id="@+id/altitude_profile_fragment"
             tools:layout="@layout/hal_fragment_altitude_profile"
             android:layout_above="@id/mission_list_fragment"/>
 

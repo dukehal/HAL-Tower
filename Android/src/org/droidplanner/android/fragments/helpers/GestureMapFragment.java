@@ -11,6 +11,7 @@ import android.gesture.GestureOverlayView.OnGestureListener;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -80,6 +81,7 @@ public class GestureMapFragment extends Fragment implements OnGestureListener {
 
 	@Override
 	public void onGestureEnded(GestureOverlayView arg0, MotionEvent arg1) {
+		Log.w("dbug", "onGestureEnded");
 		overlay.setEnabled(false);
 		List<LatLong> path = decodeGesture();
 		if (path.size() > 1) {
@@ -98,6 +100,7 @@ public class GestureMapFragment extends Fragment implements OnGestureListener {
 		float[] points = overlay.getGesture().getStrokes().get(0).points;
 		for (int i = 0; i < points.length; i += 2) {
 			path.add(new LatLong((int) points[i], (int) points[i + 1]));
+			Log.w("dbug", "Point added to path!");
 		}
 	}
 
