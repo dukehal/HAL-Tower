@@ -230,7 +230,8 @@ public class FlightActivity extends DrawerNavigationUI {
         mGoToMyLocation = (ImageButton) findViewById(R.id.my_location_button);
         mGoToDroneLocation = (ImageButton) findViewById(R.id.drone_location_button);
         actionDrawerToggle = (ImageButton) findViewById(R.id.toggle_action_drawer);
-        actionDrawerToggle.setVisibility(View.VISIBLE);
+//        actionDrawerToggle.setVisibility(View.VISIBLE);
+        actionDrawerToggle.setVisibility(View.GONE);
 
         actionDrawerToggle.setOnClickListener(new View.OnClickListener() {
             @Override
