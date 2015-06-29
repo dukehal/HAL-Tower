@@ -116,17 +116,17 @@ public class MapWrapperLayout extends RelativeLayout {
         } else {
 //            Log.w("dbug:info", "All needed references NOT loaded in MapWrapperLayout.dispatchTouchEvent()!!!");
             if (marker == null) {
-                Log.w("dbug:info", "marker == null");
+//                Log.w("dbug:info", "marker == null");
             } else {
                 if (!marker.isInfoWindowShown()) {
-                    Log.w("dbug:info", "!marker.isInfoWindowShown()");
+//                    Log.w("dbug:info", "!marker.isInfoWindowShown()");
                 }
             }
             if (map == null)  {
-                Log.w("dbug:info", "map == null");
+//                Log.w("dbug:info", "map == null");
             }
             if (infoWindow == null) {
-                Log.w("dbug:info", "infoWindow == null");
+//                Log.w("dbug:info", "infoWindow == null");
             }
 
         }
